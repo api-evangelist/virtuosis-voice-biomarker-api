@@ -1,0 +1,134 @@
+generated: '2026-08-18'
+method: derived
+source: openapi/virtuosis-voice-biomarker-api-openapi.yml
+docs: https://docs.virtuosis.ai/api-reference
+note: >-
+  Derived from the v1.3 OpenAPI 3.1.0 components.schemas $ref graph and its id-reference fields. The
+  API exposes no list endpoints, so the graph is reconstructed from schema linkage rather than from
+  collection navigation.
+entities:
+  - name: Organisation
+    implicit: true
+    identified_by: the API key itself
+    note: >-
+      Never returned as a resource and has no endpoint, but it is the real tenancy root - accounts,
+      credits, tier and analysis entitlements all hang off the organisation that owns the bearer token.
+    fields_observed_elsewhere:
+      - CreateAccountResponse.organisation_role
+      - RecordingsUsageResponse.tier
+  - name: Account
+    schema: CreateAccountResponse
+    id_field: account_id (uuid)
+    created_by: createAccount (POST /accounts)
+    fields:
+      - account_id
+      - organisation_role
+    enums:
+      organisation_role: CreateAccountResponseOrganisationRole (always "speaker")
+    note: One account per end user, always assigned the speaker role.
+  - name: Recording
+    schema: UploadRecordingResponse
+    id_field: recording_id (uuid)
+    created_by: uploadRecording (POST /recordings)
+    fields:
+      - recording_id
+      - account_id
+      - recorded_at
+      - uploaded_at
+      - audio_file_format
+      - audio_size_bytes
+      - audio_sample_rate_hz
+      - audio_bit_rate_bps
+      - audio_duration_seconds
+      - speech_duration_seconds
+  - name: RecordingAnalysis
+    schema: RecordingAnalysis / RecordingAnalysisResponse
+    read_by: getRecordingAnalysis (GET /recordings/{recording_id}/analysis)
+    note: >-
+      Not independently addressable - it is the projection of a Recording once processing completes.
+      Carries a RecordingAnalysisMetadata block plus up to four analysis family objects.
+  - name: WellbeingAnalysis
+    schema: WellbeingAnalysis -> WellbeingInsights -> {StressInsight, AnxietyInsight, DepressionInsight}
+    status_enum: AnalysisStatus
+    ratings:
+      stress: StressInsightRating (low, moderate, high)
+      anxiety: AnxietyInsightRating (minimal, mild, moderate, severe)
+      depression: DepressionInsightRating (minimal, moderate, severe)
+  - name: ParkinsonsAnalysis
+    schema: ParkinsonsAnalysis -> ParkinsonsInsights -> ParkinsonsInsight + ParkinsonsIndicators
+    access: gated - released only after manual validation by Virtuosis
+  - name: AlzheimersAnalysis
+    schema: AlzheimersAnalysis -> AlzheimersInsights -> {CognitionInsight, CognitionScores} + AlzheimersIndicators
+    access: gated - released only after manual validation by Virtuosis
+  - name: CommunicationCoachAnalysis
+    schema: CommunicationCoachAnalysis -> CommunicationCoachInsights -> CommunicationCoachInsight + CommunicationCoachIndicators
+    note: New in v1.3; has no counterpart in the v1.2 contract.
+  - name: RecordingsUsage
+    schema: RecordingsUsageResponse
+    read_by: getRecordingsUsage (GET /usage/recordings)
+    scope: organisation
+    fields:
+      - trial_remaining
+      - trial_granted
+      - included_remaining
+      - included_granted
+      - purchased_remaining
+      - tier
+relationships:
+  - from: Organisation
+    to: Account
+    type: has_many
+    via: implicit - accounts are created under the API key's organisation
+  - from: Account
+    to: Recording
+    type: has_many
+    via: account_id
+  - from: Recording
+    to: RecordingAnalysis
+    type: has_one
+    via: recording_id (path parameter)
+  - from: RecordingAnalysis
+    to: WellbeingAnalysis
+    type: has_one
+    via: $ref, optional per requested analysis[]
+  - from: RecordingAnalysis
+    to: ParkinsonsAnalysis
+    type: has_one
+    via: $ref, optional per requested analysis[]
+  - from: RecordingAnalysis
+    to: AlzheimersAnalysis
+    type: has_one
+    via: $ref, optional per requested analysis[]
+  - from: RecordingAnalysis
+    to: CommunicationCoachAnalysis
+    type: has_one
+    via: $ref, optional per requested analysis[]
+  - from: RecordingAnalysis
+    to: RecordingAnalysisMetadata
+    type: has_one
+    via: $ref
+  - from: Organisation
+    to: RecordingsUsage
+    type: has_one
+    via: implicit - the usage endpoint is scoped to the API key's organisation
+identifiers:
+  format: uuid
+  prefixes: none
+  note: >-
+    account_id and recording_id are bare UUIDs with no type prefix, so an identifier alone does not
+    disclose which resource it addresses.
+shared_enums:
+  - name: AnalysisType
+    values: [wellbeing, parkinsons, alzheimers, communication_coach]
+    used_by: [UploadRecordingRequest.analysis, getRecordingAnalysis query filter]
+  - name: AnalysisStatus
+    values: [completed, processing, error, not_requested]
+    used_by: every analysis family object
+    note: >-
+      not_requested is the tell that the response shape is fixed while the content is entitlement- and
+      request-dependent.
+counts:
+  schemas: 34
+  entities: 10
+  relationships: 9
+  addressable_resources: 3

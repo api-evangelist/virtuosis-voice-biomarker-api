@@ -1,0 +1,121 @@
+generated: '2026-08-18'
+method: searched
+source: https://docs.virtuosis.ai/api-reference
+docs:
+  - https://docs.virtuosis.ai/api-reference
+  - https://docs.virtuosis.ai/voice-biomarker-api
+derived_from: openapi/virtuosis-voice-biomarker-api-openapi.yml
+auth:
+  style: bearer-token
+  header: 'Authorization: Bearer <API_KEY>'
+  scope_of_credential: organisation
+  see: authentication/virtuosis-voice-biomarker-api-authentication.yml
+idempotency:
+  supported: false
+  header: null
+  scope: null
+  retention: null
+  note: >-
+    No idempotency mechanism is published. POST /recordings is the expensive, credit-consuming,
+    non-idempotent operation in this API and there is no Idempotency-Key header, no client-supplied
+    request id, and no documented dedupe window - a retried upload after a timeout will bill a second
+    credit and create a second recording_id. POST /accounts has the same shape. This is the single
+    highest-value gap for agent callers, because "analysis processing may take up to five minutes"
+    makes client timeouts and retries the normal case rather than the exception.
+  recommendation_to_provider: >-
+    Accept an Idempotency-Key on POST /recordings and POST /accounts and replay the original response
+    for a stated retention window.
+pagination:
+  supported: false
+  note: >-
+    No collection endpoints exist. Every operation returns either a single object or a fixed usage
+    summary, so there is nothing to paginate. There is no list-recordings and no list-accounts
+    operation on the public contract.
+filtering:
+  supported: true
+  style: query parameter, comma-separated enum
+  parameters:
+    - operation: getRecordingAnalysis
+      name: analysis
+      in: query
+      type: string
+      description: Comma-separated list of analysis types to include.
+      default: all
+      values:
+        - wellbeing
+        - parkinsons
+        - alzheimers
+        - communication_coach
+  note: >-
+    This is the API's only response-shaping control - a sparse-fieldset mechanism in all but name,
+    selecting which analysis families come back rather than which fields.
+expansion:
+  supported: false
+metadata:
+  supported: false
+  note: No customer-defined metadata field is exposed on any resource.
+request_tracing:
+  request_id_header: none
+  correlation_id: none
+  note: >-
+    Neither the docs nor the OpenAPI declares a request/trace id on any response. Errors cannot be
+    quoted back to support by id; the provider states internal server errors are captured in its own
+    error tracking, which is a provider-side facility, not a client-side one.
+async_model:
+  style: submit-then-poll
+  submit: POST /recordings returns recording_id immediately
+  poll: GET /recordings/{recording_id}/analysis
+  status_field: analysis[].status
+  status_values:
+    - completed
+    - processing
+    - error
+    - not_requested
+  recommended_interval: 15-30 seconds
+  minimum_interval: 5 seconds
+  timeout: 5 minutes
+  callbacks: none
+  webhooks: none
+  note: >-
+    Polling is the ONLY completion signal. There are no webhooks, no callbacks and no event stream, so
+    every integration must hold a poll loop open for up to five minutes per recording.
+identifiers:
+  style: UUID
+  fields:
+    - account_id
+    - recording_id
+  prefixes: none
+  note: Opaque RFC 4122 UUIDs with no type prefix, so an id alone does not identify its resource type.
+payload_conventions:
+  media_type: application/json
+  field_case: snake_case
+  timestamps: ISO 8601 / RFC 3339 (date-time), e.g. recorded_at, uploaded_at
+  binary: >-
+    Audio is carried as a Base64 string inside the JSON body. The docs are explicit that the recording
+    endpoint does NOT accept multipart file uploads.
+  size_ceiling: 50 MB
+versioning:
+  style: path
+  pattern: https://api.virtuosis.ai/v{major}.{minor}
+  current: v1.3
+  previous: v1.2
+  concurrent_versions: 2
+  header_negotiation: none
+  see: lifecycle/virtuosis-voice-biomarker-api-lifecycle.yml
+errors:
+  envelope: '{ "error": { "type": "...", "message": "..." } }'
+  rfc9457: false
+  see: errors/virtuosis-voice-biomarker-api-problem-types.yml
+rate_limit_signaling:
+  headers: none
+  exhaustion_status: 429
+  retry_after: not documented
+  see: rate-limits/virtuosis-voice-biomarker-api-rate-limits.yml
+client_obligations:
+  note: >-
+    Unusually for a REST API, Virtuosis places binding obligations on the CLIENT UI, not just the
+    client code. Applications displaying Virtuosis outputs must surface the disclaimer "Not intended
+    to provide a medical diagnosis or to replace clinical judgment. Outputs are for clinical decision
+    support and must be interpreted by a qualified healthcare professional." and must carry legal
+    manufacturer information for the CE-marked device.
+  source: https://docs.virtuosis.ai/guidelines

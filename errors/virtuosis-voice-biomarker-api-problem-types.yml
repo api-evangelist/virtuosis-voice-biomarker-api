@@ -1,0 +1,134 @@
+generated: '2026-08-18'
+method: derived
+source: openapi/virtuosis-voice-biomarker-api-openapi.yml
+docs:
+  - https://docs.virtuosis.ai/api-reference
+  - https://docs.virtuosis.ai/api-reference/recordings/upload-recording
+format: vendor
+rfc9457: false
+envelope:
+  media_type: application/json
+  shape: |
+    {
+      "error": {
+        "type": "<machine-readable error type>",
+        "message": "<human-readable description>"
+      }
+    }
+  fields:
+    - name: error.type
+      required: true
+      description: Machine-readable error type.
+    - name: error.message
+      required: true
+      description: Human-readable description of the error.
+  note: >-
+    Not RFC 9457. The API returns a single-key JSON object wrapping a {type, message} pair with
+    Content-Type application/json, not application/problem+json. There is no type URI, no title,
+    no instance, and no request id in the envelope.
+  extensibility: >-
+    The provider states in the API reference that error `type` values are documented in the OpenAPI
+    schema and may expand over time - consumers must treat the set as open and match defensively.
+  internal_errors: >-
+    Internal server errors may omit a detailed message, but the provider records them in its own
+    error tracking for debugging.
+statuses:
+  - status: 400
+    title: Bad request
+    operations:
+      - createAccount
+      - uploadRecording
+      - getRecordingAnalysis
+    remediation: >-
+      Validate the JSON body against the schema. For uploadRecording the analysis array is required
+      and must list at least one of wellbeing, parkinsons, alzheimers, communication_coach; audio must
+      be a Base64 string, not a multipart file.
+  - status: 401
+    title: Unauthorized
+    operations:
+      - createAccount
+      - uploadRecording
+      - getRecordingAnalysis
+      - getRecordingsUsage
+    remediation: 'Send a valid organisation API key as Authorization: Bearer <API_KEY>.'
+  - status: 403
+    title: Forbidden
+    operations:
+      - createAccount
+      - uploadRecording
+      - getRecordingAnalysis
+      - getRecordingsUsage
+    conditions:
+      - Requested analysis is not enabled for the organisation (uploadRecording)
+      - Access is suspended (all operations)
+      - API billing is not provisioned for the organisation (uploadRecording, getRecordingsUsage)
+    remediation: >-
+      Check GET /usage/recordings for credit balances and tier. Medical analyses (parkinsons,
+      alzheimers) are enabled only after manual validation by Virtuosis; contact the provider to have
+      them released.
+  - status: 404
+    title: Recording not found
+    operations:
+      - getRecordingAnalysis
+    remediation: Confirm the recording_id returned by uploadRecording; it is scoped to your organisation.
+  - status: 413
+    title: File too large
+    operations:
+      - uploadRecording
+    limit: 50 MB
+    remediation: Keep the Base64 payload under the 50 MB maximum upload size.
+  - status: 429
+    title: Rate limit exceeded
+    operations:
+      - uploadRecording
+      - getRecordingAnalysis
+    remediation: >-
+      Back off. The provider documents a recommended polling interval of 15-30 seconds and a hard
+      floor of no more frequently than every 5 seconds on getRecordingAnalysis.
+    note: >-
+      429 exists on v1.3 only. The v1.2 contract in openapi/_original declares no 429 on any
+      operation, so rate limiting was introduced (or first documented) in v1.3.
+  - status: 500
+    title: Internal server error
+    operations:
+      - createAccount
+      - uploadRecording
+      - getRecordingAnalysis
+      - getRecordingsUsage
+    remediation: Retry with backoff; the message may be absent.
+named_error_types:
+  note: >-
+    Virtuosis does not publish a consolidated error-type registry. These are the only error `type`
+    values named in prose anywhere on the public surface; the full enum is not published.
+  source: https://docs.virtuosis.ai/api-reference/recordings/upload-recording
+  types:
+    - type: SpeakerSpeechTooShort
+      status: 400
+      cause: >-
+        With isolate_oldest_speaker enabled, the retained speaker's speech does not clear the
+        30-second minimum.
+      action: Submit a longer clip, or disable isolate_oldest_speaker.
+    - type: RecordingTooLongForIsolation
+      status: 400
+      cause: With isolate_oldest_speaker enabled, the recording is longer than 10 minutes.
+      action: Trim the clip to 10 minutes or less, or disable isolate_oldest_speaker.
+    - type: UploadLimitExceeded
+      status: 403
+      cause: The organisation's credit balance is exhausted.
+      action: Purchase credits or wait for the monthly included allotment to reset.
+      source: https://docs.virtuosis.ai/api-reference
+    - type: Suspended
+      status: 403
+      cause: Access is suspended for the organisation.
+      action: Contact Virtuosis.
+      source: https://docs.virtuosis.ai/api-reference
+    - type: ApiNotProvisioned
+      status: 403
+      cause: API billing has not been provisioned for the organisation.
+      action: Complete billing provisioning with Virtuosis before calling the API.
+      source: https://docs.virtuosis.ai/api-reference
+gaps:
+  - >-
+    No published error-type registry. Five types are named in prose; the OpenAPI declares error.type
+    as an unconstrained string with no enum, so a client cannot exhaustively branch on it.
+  - No error code is carried in a header, and no request/correlation id is returned to quote in support.

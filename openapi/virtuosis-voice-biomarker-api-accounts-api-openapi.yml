@@ -1,0 +1,106 @@
+openapi: 3.2.0
+info:
+  title: Reference Accounts API
+  version: 1.0.0
+servers:
+- url: https://api.virtuosis.ai/v1.3
+  description: https://api.virtuosis.ai/v1.3
+tags:
+- name: accounts
+paths:
+  /accounts:
+    post:
+      operationId: createAccount
+      summary: Create an account
+      description: 'Creates an account that audio recordings and analysis results can be associated with. We recommend creating one account per user.
+
+        '
+      tags:
+      - accounts
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer authentication
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access is suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    CreateAccountResponseOrganisationRole:
+      type: string
+      enum:
+      - speaker
+      description: The organisation role assigned to the created account. API-created accounts are always speakers.
+      title: CreateAccountResponseOrganisationRole
+    ErrorError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Machine-readable error type.
+        message:
+          type: string
+          description: Human-readable description of the error.
+      required:
+      - type
+      - message
+      description: Error details.
+      title: ErrorError
+    CreateAccountResponse:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the created account.
+        organisation_role:
+          $ref: '#/components/schemas/CreateAccountResponseOrganisationRole'
+          description: The organisation role assigned to the created account. API-created accounts are always speakers.
+      required:
+      - account_id
+      - organisation_role
+      title: CreateAccountResponse
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      required:
+      - error
+      title: Error
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

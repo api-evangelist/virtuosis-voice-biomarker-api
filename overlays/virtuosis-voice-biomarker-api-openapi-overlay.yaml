@@ -1,0 +1,118 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enrichment overlay - Virtuosis Voice Biomarker API
+  version: 1.0.0
+extends: ../openapi/virtuosis-voice-biomarker-api-openapi.yml
+x-provenance:
+  generated: '2026-08-18'
+  method: generated
+  source: >-
+    Authored by the API Evangelist enrichment pipeline from facts published by Virtuosis on
+    docs.virtuosis.ai and www.virtuosis.ai. Every value below is quoted or directly restated from the
+    provider's own pages - nothing is invented. The upstream spec at
+    https://docs.virtuosis.ai/openapi/api-reference.json is never mutated.
+  note: >-
+    The upstream contract is technically sound but identity-thin: info.title is the Fern default
+    "API Reference", info.version is 1.0.0 while the API is v1.3, there is no description, contact,
+    licence or termsOfService, no root security[] block (auth is expressed as a hand-declared
+    Authorization header parameter on each operation), no tag descriptions, and /ping carries an empty
+    string tag. This overlay repairs identity and documents the runtime semantics the docs state in
+    prose but the spec does not carry.
+actions:
+  - target: $.info
+    description: Give the contract a real identity - the upstream title is the Fern default.
+    update:
+      title: Virtuosis Voice Biomarker API
+      version: '1.3'
+      summary: AI voice biomarker analysis for wellbeing, Parkinson's, Alzheimer's/MCI and communication coaching.
+      description: >-
+        REST API from Virtuosis AI, an EPFL spin-off, that analyses short speech recordings and returns
+        voice-derived health, wellbeing and communication insights. The flow is three steps: create an
+        account for the user, upload a Base64-encoded recording naming the analysis families to run,
+        then poll for results until processing completes. Recordings need at least 30 seconds of free
+        speech, may be WAV, MP3, MP4 or OGG, and may not exceed 50 MB. Analysis may take up to five
+        minutes. Delivered as CE-marked software as a medical device; wellbeing and communication
+        insights are self-service, while Parkinson's and Alzheimer's insights are released only after
+        manual validation by Virtuosis.
+      termsOfService: https://www.virtuosis.ai/terms-of-service
+      contact:
+        name: Virtuosis AI
+        url: https://www.virtuosis.ai/contact-us
+      x-documentation: https://docs.virtuosis.ai/voice-biomarker-api
+      x-privacy-policy: https://www.virtuosis.ai/privacy-policy
+      x-data-processing-addendum: https://www.virtuosis.ai/dpa
+  - target: $
+    description: >-
+      Declare the bearer scheme at the root so tooling applies it globally. Upstream defines
+      components.securitySchemes.bearerAuth but never references it, expressing auth instead as a
+      required Authorization header parameter on every operation.
+    update:
+      security:
+        - bearerAuth: []
+      tags:
+        - name: accounts
+          description: Create the end-user accounts that recordings and analysis results are associated with.
+        - name: recordings
+          description: Upload speech recordings for analysis and poll for the resulting insights.
+        - name: usage
+          description: Inspect the organisation's remaining trial, included and purchased analysis credits.
+  - target: $.servers[0]
+    description: Replace the placeholder server description, which upstream sets to the URL itself.
+    update:
+      description: Production. The only environment Virtuosis publishes - there is no sandbox host.
+  - target: $.paths['/recordings'].post
+    description: Record the upload constraints and credit semantics the docs state in prose.
+    update:
+      x-max-request-size: 50MB
+      x-audio-requirements:
+        formats: [wav, mp3, mp4, ogg]
+        encoding: base64 string in the JSON body; multipart upload is not accepted
+        min_sample_rate_hz: 8000
+        min_bit_rate_bps: 32000
+        channels: 1
+        min_speech_seconds: 30
+      x-consumes-credits: true
+      x-idempotent: false
+      x-idempotency-key: null
+      x-processing-time: up to 5 minutes, asynchronous
+      x-agentic-access:
+        action_class: write
+        consequence: billable
+        note: >-
+          Consumes an organisation credit and has no idempotency key, so a retry after a client
+          timeout bills twice and creates a second recording_id.
+  - target: $.paths['/recordings/{recording_id}/analysis'].get
+    description: Record the documented polling contract.
+    update:
+      x-polling:
+        recommended_interval_seconds: 15-30
+        minimum_interval_seconds: 5
+        timeout_minutes: 5
+        completion_signal: analysis[].status == "completed"
+      x-agentic-access:
+        action_class: read
+        consequence: safe
+  - target: $.paths['/ping'].get
+    description: Upstream tags this operation with an empty string, which breaks tag-based grouping.
+    update:
+      tags:
+        - health
+      x-authentication-required: false
+      x-agentic-access:
+        action_class: read
+        consequence: safe
+  - target: $.paths['/usage/recordings'].get
+    update:
+      x-agentic-access:
+        action_class: read
+        consequence: safe
+      x-credit-buckets:
+        - trial - one-time, consumed before included and purchased
+        - included - monthly, resets each billing cycle
+        - purchased - credit packs, roll over until used or refunded
+  - target: $.components.securitySchemes.bearerAuth
+    update:
+      description: >-
+        Organisation API key presented as a bearer token. Provisioned through the Virtuosis app at
+        https://app.virtuosis.ai/ after a trial request. The key determines tenancy - accounts created
+        via POST /accounts belong to the key's organisation and are always assigned the speaker role.

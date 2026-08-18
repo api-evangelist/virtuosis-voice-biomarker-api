@@ -1,0 +1,75 @@
+generated: '2026-08-18'
+method: searched
+source: https://docs.virtuosis.ai/api-reference
+docs:
+  - https://docs.virtuosis.ai/api-reference
+  - https://docs.virtuosis.ai/voice-biomarker-api
+derived_from: openapi/virtuosis-voice-biomarker-api-openapi.yml
+summary:
+  types:
+    - http
+  model: bearer-token
+  oauth2: false
+  scopes: false
+  note: >-
+    Single-scheme API. A long-lived organisation API key is presented as an HTTP Bearer token on every
+    request. There are no OAuth flows, no scopes, no refresh, and no separate test credential - so
+    scopes/ is intentionally absent for this provider.
+schemes:
+  - name: bearerAuth
+    type: http
+    scheme: bearer
+    in: header
+    header: Authorization
+    format: 'Authorization: Bearer <API_KEY>'
+    applied_to: all operations
+    sources:
+      - openapi/virtuosis-voice-biomarker-api-openapi.yml
+      - https://docs.virtuosis.ai/api-reference
+    note: >-
+      The v1.3 OpenAPI declares bearerAuth under components.securitySchemes but does not attach a
+      root-level security[] block; instead every operation declares an explicit required Authorization
+      header parameter. The docs are unambiguous that a bearer token is required on all requests.
+credentials:
+  issuance: >-
+    API keys are provisioned in the Virtuosis app at https://app.virtuosis.ai/. The public site routes
+    API access through a trial request form (https://www.virtuosis.ai/trial-request) rather than
+    instant self-service key generation.
+  scope_of_key: organisation
+  note: >-
+    Accounts created through POST /accounts are scoped to the organisation that owns the API key and
+    are always assigned the "speaker" organisation role - the key, not the request, determines tenancy.
+  key_prefix: null
+  key_prefix_note: The provider does not publish a key prefix convention.
+  rotation_policy: not published
+  expiry: not published
+authorization:
+  model: >-
+    Entitlement-based rather than scope-based. Which analysis families a key may request is controlled
+    server-side by Virtuosis, not by anything the caller sends.
+  tiers:
+    - name: self-service
+      covers:
+        - wellbeing
+        - communication_coach
+      note: >-
+        Wellbeing insights (stress, anxiety, mood) and communication insights are available through
+        self-service access.
+      source: https://www.virtuosis.ai/voice-biomarker-api
+    - name: manually validated
+      covers:
+        - parkinsons
+        - alzheimers
+      note: >-
+        Medical insights are released only after manual validation by Virtuosis, stated as within 48
+        hours, in accordance with the intended purpose of its CE-marked software as a medical device.
+      source: https://www.virtuosis.ai/voice-biomarker-api
+  denial_signals:
+    - status: 403
+      condition: Requested analysis is not enabled for the organisation
+    - status: 403
+      condition: Access is suspended
+    - status: 403
+      condition: API billing is not provisioned for the organisation
+    - status: 401
+      condition: Missing or invalid bearer token

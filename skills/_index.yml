@@ -1,0 +1,22 @@
+generated: '2026-08-18'
+method: generated
+source: >-
+  Packaged Agent Skills generated from the published Virtuosis OpenAPI 3.1.0 (v1.3). Every step is
+  grounded in an operationId verified verbatim in
+  ../openapi/virtuosis-voice-biomarker-api-openapi.yml; cross-cutting rules cite ../conventions/,
+  ../errors/ and ../authentication/, and every runtime rule is quoted from docs.virtuosis.ai.
+note: >-
+  Virtuosis publishes no skills, no AGENTS.md and no llms-full.txt tool list of its own; these are
+  API Evangelist generations, not provider artifacts.
+skills:
+  - file: virtuosis-voice-biomarker-api-analyze-wellbeing-recording.md
+    name: Analyze a voice recording for wellbeing insights
+    api: openapi/virtuosis-voice-biomarker-api-openapi.yml
+    operations: [createAccount, uploadRecording, getRecordingAnalysis]
+  - file: virtuosis-voice-biomarker-api-check-usage-and-entitlements.md
+    name: Check credit balance and API health before uploading
+    api: openapi/virtuosis-voice-biomarker-api-openapi.yml
+    operations: [getRecordingsUsage, ping]
+coverage:
+  operations_total: 5
+  operations_covered: 5

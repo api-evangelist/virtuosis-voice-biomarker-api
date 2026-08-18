@@ -1,0 +1,57 @@
+generated: '2026-08-18'
+method: derived
+source: >-
+  mcp/virtuosis-voice-biomarker-api-tools-list.json (live tools/list, HTTP 200, anonymous) bound
+  against openapi/virtuosis-voice-biomarker-api-openapi.yml (OpenAPI 3.1.0, v1.3).
+surfaces:
+  openapi:
+    file: openapi/virtuosis-voice-biomarker-api-openapi.yml
+    server: https://api.virtuosis.ai/v1.3
+    gated: true
+    note: 'Every operation requires Authorization: Bearer <API_KEY>.'
+  mcp:
+    url: https://docs.virtuosis.ai/_mcp/server
+    gated: false
+    note: Anonymous; tools/list returned the real schema without a token.
+  graphql: null
+finding: >-
+  The MCP surface and the REST surface do not overlap at all. Virtuosis publishes a Fern docs MCP
+  server whose single tool searches documentation prose; none of the five REST operations is exposed
+  as a tool. An agent can therefore READ ABOUT the voice biomarker API over MCP but cannot INVOKE it.
+  This is the "docs MCP, not API MCP" pattern - a real agent surface, but a discovery one, not an
+  execution one.
+crosswalk: []
+mcp_only:
+  - tool: searchDocs
+    reason: >-
+      Documentation full-text search implemented by the Fern docs platform. It has no backing public
+      REST operation on api.virtuosis.ai and is not part of the v1.3 contract.
+rest_only:
+  - operationId: createAccount
+    method: POST
+    path: /accounts
+    reason: No MCP tool exposes account creation.
+  - operationId: uploadRecording
+    method: POST
+    path: /recordings
+    reason: No MCP tool exposes recording upload.
+  - operationId: getRecordingAnalysis
+    method: GET
+    path: /recordings/{recording_id}/analysis
+    reason: No MCP tool exposes analysis retrieval.
+  - operationId: getRecordingsUsage
+    method: GET
+    path: /usage/recordings
+    reason: No MCP tool exposes usage/credit balances.
+  - operationId: ping
+    method: GET
+    path: /ping
+    reason: No MCP tool exposes the health check.
+coverage:
+  mcp_tools: 1
+  rest_operations: 5
+  bound: 0
+  mcp_only: 1
+  rest_only: 5
+  rest_operations_reachable_via_mcp: 0
+  overlap_percent: 0

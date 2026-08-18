@@ -1,0 +1,108 @@
+generated: '2026-08-18'
+method: probed
+source: >-
+  https://docs.virtuosis.ai/api-reference plus live version probes against api.virtuosis.ai on
+  2026-08-18 and the RFC 9727 api-catalog at https://docs.virtuosis.ai/.well-known/api-catalog
+versioning:
+  scheme: path-based major.minor
+  pattern: https://api.virtuosis.ai/v{major}.{minor}
+  current: v1.3
+  documented_versions:
+    - version: v1.3
+      status: current
+      default: true
+      spec: openapi/_original/virtuosis-voice-biomarker-api-v1-3-openapi.yaml
+      docs: https://docs.virtuosis.ai/v-1-3/llms.txt
+      probe:
+        url: https://api.virtuosis.ai/v1.3/ping
+        status: 200
+    - version: v1.2
+      status: still serving
+      default: false
+      spec: openapi/_original/virtuosis-voice-biomarker-api-v1-2-openapi.yaml
+      docs: https://docs.virtuosis.ai/v-1-2/llms.txt
+      probe:
+        url: https://api.virtuosis.ai/v1.2/ping
+        status: 200
+      note: >-
+        Published as a selectable docs version and still answering on the live host. It is not marked
+        deprecated anywhere - there is no sunset date, no deprecation banner, and no statement of how
+        long it will remain.
+  probed_absent:
+    - version: v1.1
+      url: https://api.virtuosis.ai/v1.1/ping
+      status: 404
+      note: Retired or never public. No retirement notice was published.
+    - version: v1.4
+      url: https://api.virtuosis.ai/v1.4/ping
+      status: 404
+  concurrency: 2 versions live simultaneously
+  negotiation: URL path only; no Accept-Version or API-Version header.
+deprecation:
+  policy_published: false
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy exists on the public surface. No RFC 8594 Sunset or Deprecation header was
+    observed on the live v1.2 or v1.3 responses, no operation carries deprecated: true in either
+    OpenAPI, and nothing states what happens to v1.2. A consumer on v1.2 has no published signal about
+    when it will stop working.
+breaking_changes_v1_2_to_v1_3:
+  method: derived
+  source: diff of openapi/_original v1.2 vs v1.3
+  note: >-
+    Derived by comparing the two published contracts, not from a provider changelog (none exists).
+  schema_renames:
+    - v1_2: WellbeingPredictions / StressPrediction / AnxietyPrediction / DepressionPrediction
+      v1_3: WellbeingInsights / StressInsight / AnxietyInsight / DepressionInsight
+    - v1_2: ParkinsonsPredictions
+      v1_3: ParkinsonsInsights (plus a new ParkinsonsInsight member)
+    - v1_2: AlzheimersPredictions
+      v1_3: AlzheimersInsights (plus new CognitionScores and CognitionInsight)
+  additions:
+    - Communication Coach analysis family (CommunicationCoachAnalysis, CommunicationCoachIndicators, CommunicationCoachInsight, CommunicationCoachInsights) - absent from v1.2 entirely.
+    - 429 Rate limit exceeded responses on uploadRecording and getRecordingAnalysis.
+    - Rating enums on wellbeing insights (StressInsightRating, AnxietyInsightRating, DepressionInsightRating).
+  removals: []
+  operations: unchanged - the same five operationIds exist in both versions.
+status_page:
+  exists: false
+  url: null
+  probed:
+    - url: https://status.virtuosis.ai/
+      status: 000
+      note: DNS does not resolve.
+    - url: https://www.virtuosis.ai/status
+      status: 404
+  health_check:
+    operation: ping
+    url: https://api.virtuosis.ai/v1.3/ping
+    auth_required: false
+    probed_status: 200
+    response: '{"message": "pong"}'
+    note: >-
+      The API exposes an anonymous health check, which is the only availability signal Virtuosis
+      offers. It is not a status page - there is no incident history, no component breakdown and no
+      subscription.
+sla:
+  published: false
+  note: >-
+    No uptime or support-response SLA is published. The Terms of Service and DPA are the only
+    contractual documents on the public surface.
+  processing_expectations:
+    - Analysis processing may take up to five minutes.
+    - Medical analyses (Parkinson's, Alzheimer's) are released after manual validation, stated as within 48 hours.
+support:
+  channels:
+    - type: contact form
+      url: https://www.virtuosis.ai/contact-us
+    - type: faq
+      url: https://www.virtuosis.ai/#FAQ
+    - type: email
+      value: privacy@virtuosis.ch
+      scope: data protection and sub-processor requests only
+      source: https://www.virtuosis.ai/dpa
+  note: No developer support channel, no community forum, and no public issue tracker.

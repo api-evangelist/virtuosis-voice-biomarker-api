@@ -1,0 +1,38 @@
+openapi: 3.2.0
+info:
+  title: Reference  API
+  version: 1.0.0
+servers:
+- url: https://api.virtuosis.ai/v1.3
+  description: https://api.virtuosis.ai/v1.3
+tags:
+- name: ''
+paths:
+  /ping:
+    get:
+      operationId: ping
+      summary: Health check
+      tags:
+      - ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+components:
+  schemas:
+    PingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Confirmation message.
+      required:
+      - message
+      title: PingResponse
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

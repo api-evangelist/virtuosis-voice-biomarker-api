@@ -1,0 +1,57 @@
+generated: '2026-08-18'
+method: searched
+source: https://docs.virtuosis.ai/api-reference/recordings/get-recording-analysis
+docs:
+  - https://docs.virtuosis.ai/api-reference
+  - https://docs.virtuosis.ai/api-reference/recordings/get-recording-analysis
+  - https://docs.virtuosis.ai/voice-biomarker-api
+limit_count: 0
+limits: []
+guidance:
+  - scope: per-recording polling
+    operation: getRecordingAnalysis
+    rule: Poll every 15 to 30 seconds (recommended).
+    floor: Do not poll more frequently than every 5 seconds.
+    timeout: Use a five-minute timeout for analysis processing.
+    source: https://docs.virtuosis.ai/api-reference
+    note: >-
+      Stated as client guidance to avoid rate limiting, not as a published quota. No requests-per-window
+      number is given.
+  - scope: per-request payload
+    operation: uploadRecording
+    rule: Maximum upload size 50 MB; exceeding it returns 413.
+    source: https://docs.virtuosis.ai/api-reference/recordings/upload-recording
+    note: A size ceiling, not a rate limit - recorded here because it is the only hard published request bound.
+exhaustion:
+  status: 429
+  operations:
+    - uploadRecording
+    - getRecordingAnalysis
+  description: Rate limit exceeded
+  source: openapi/virtuosis-voice-biomarker-api-openapi.yml
+  retry_after: not documented
+headers:
+  published: []
+  note: >-
+    No rate-limit response headers are documented anywhere on the public surface - no X-RateLimit-*,
+    no RateLimit-* (RFC 9331 draft), no Retry-After. The 429 is declared in the OpenAPI but its
+    response carries only the standard {error:{type,message}} envelope, so an agent that hits the limit
+    is told THAT it was limited but not the window, the remaining budget, or when to retry. Headers
+    could not be observed on an authenticated call, but GET /v1.3/ping (the one anonymous operation)
+    was probed live on 2026-08-18 and returned HTTP 200 with only content-type, date, cache-control:
+    private and request-context - confirming no rate-limit header family is emitted at the edge.
+quota_model:
+  type: credits
+  note: >-
+    The commercial constraint is a credit balance, not a request rate. GET /usage/recordings returns
+    trial_remaining, trial_granted, included_remaining, included_granted, purchased_remaining and the
+    current tier. Uploads consume credits; exhaustion is signalled as 403 UploadLimitExceeded, which is
+    distinct from the 429 rate limit.
+  buckets:
+    - name: trial
+      description: One-time trial credits. Consumed before included and purchased credits.
+    - name: included
+      description: Monthly included credits for the current billing period. Reset each cycle.
+    - name: purchased
+      description: Purchased credit-pack credits. Roll over until used or refunded.
+  source: https://docs.virtuosis.ai/api-reference/usage/get-recordings-usage

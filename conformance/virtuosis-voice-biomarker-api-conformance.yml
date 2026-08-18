@@ -1,0 +1,182 @@
+generated: '2026-08-18'
+method: searched
+source: https://www.virtuosis.ai/ethics-privacy
+docs:
+  - https://www.virtuosis.ai/ethics-privacy
+  - https://www.virtuosis.ai/dpa
+  - https://www.virtuosis.ai/voice-biomarker-api
+  - https://docs.virtuosis.ai/guidelines
+derived_from:
+  - openapi/virtuosis-voice-biomarker-api-openapi.yml
+  - well-known/virtuosis-voice-biomarker-api-well-known.yml
+  - mcp/virtuosis-voice-biomarker-api-mcp.yml
+technical_standards:
+  - id: openapi-3.1
+    conforms: true
+    evidence: >-
+      Two OpenAPI 3.1.0 documents are published and machine-fetchable (v1.3 and v1.2), both parse, both
+      declare servers[], operationIds, tags, summaries, descriptions, 2xx and 4xx/5xx responses, request
+      and response examples, reusable components.schemas and a securityScheme.
+    source: https://docs.virtuosis.ai/openapi/api-reference.json
+  - id: rfc9727-api-catalog
+    conforms: true
+    evidence: >-
+      docs.virtuosis.ai serves /.well-known/api-catalog as application/linkset+json with
+      profile="https://www.rfc-editor.org/info/rfc9727", carrying service-desc and service-doc links for
+      both API versions. Verified HTTP 200 on 2026-08-18.
+    source: https://docs.virtuosis.ai/.well-known/api-catalog
+  - id: mcp-2025-06-18
+    conforms: true
+    evidence: >-
+      A hosted streamable-http MCP server at https://docs.virtuosis.ai/_mcp/server completed
+      initialize (protocolVersion 2025-06-18, serverInfo fern-docs-mcp-server 1.0.0) and returned a
+      real tools/list anonymously. Scope is documentation search only, not the REST API.
+    source: https://docs.virtuosis.ai/_mcp/server
+  - id: llms-txt
+    conforms: true
+    evidence: >-
+      /llms.txt is served at the docs root and per-version (/v-1-3/llms.txt, /v-1-2/llms.txt), listing
+      every doc page with .md twins plus the OpenAPI exports.
+    source: https://docs.virtuosis.ai/llms.txt
+  - id: rfc6750-bearer
+    conforms: true
+    evidence: 'All operations require Authorization: Bearer <API_KEY>; OpenAPI declares http/bearer.'
+  - id: oauth2
+    conforms: false
+    evidence: No OAuth flows. /.well-known/oauth-authorization-server 404s on every host.
+  - id: oidc
+    conforms: false
+    evidence: /.well-known/openid-configuration 404s on every host.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors use a vendor {error:{type,message}} envelope with application/json, not
+      application/problem+json. See errors/virtuosis-voice-biomarker-api-problem-types.yml.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt 404s on api.virtuosis.ai, docs.virtuosis.ai and www.virtuosis.ai.
+  - id: rfc8594-sunset
+    conforms: false
+    evidence: No Sunset or Deprecation header observed on live v1.2 or v1.3 responses.
+  - id: a2a-agent-card
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json 404 on all four hosts.
+  - id: asyncapi
+    conforms: false
+    evidence: No event, streaming or webhook surface exists - the API is submit-then-poll only.
+  - id: fhir
+    conforms: false
+    evidence: >-
+      Not applicable in the shipped contract. Virtuosis returns proprietary voice-biomarker JSON
+      (WellbeingInsights, ParkinsonsInsights, AlzheimersInsights, CommunicationCoachInsights) rather
+      than FHIR resources such as Observation, and no FHIR mapping is published. Worth noting because
+      the product targets healthcare integrators who will usually need one.
+  - id: pagination
+    conforms: false
+    evidence: No collection endpoints exist.
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      No Idempotency-Key on POST /recordings or POST /accounts, despite POST /recordings being
+      credit-consuming and taking up to five minutes to process.
+regulatory_and_compliance:
+  note: >-
+    Claims published by Virtuosis on its own Ethics & Privacy page and DPA. Recorded as PUBLISHED
+    CLAIMS - certificate numbers, audit reports and scope statements are not made available publicly,
+    and no third-party attestation could be independently verified from the public surface.
+  claims:
+    - id: ce-mark-samd
+      claim: CE-marked software as a medical device
+      published: true
+      evidence: >-
+        The API product page states that medical insights are released only after manual validation by
+        Virtuosis "in accordance with the intended purpose of its CE-marked software as a medical
+        device", and the docs Guidelines page requires client applications to carry legal manufacturer
+        information and offers CE marking documentation on request.
+      source: https://docs.virtuosis.ai/guidelines
+      independently_verified: false
+      note: >-
+        The CE certificate, notified body and UDI are not published. Virtuosis states developers should
+        request CE marking documentation when required for deployment, procurement or compliance.
+    - id: gdpr
+      claim: GDPR compliant
+      published: true
+      evidence: >-
+        Ethics & Privacy page asserts GDPR compliance; a full Data Processing Addendum is published
+        naming Virtuosis Artificial Intelligence SA as Processor, with breach notification without
+        undue delay, sub-processor terms, an annual audit right, and Appendix B technical and
+        organizational measures.
+      source: https://www.virtuosis.ai/dpa
+    - id: fadp
+      claim: Swiss Federal Act on Data Protection
+      published: true
+      evidence: The DPA names the FADP alongside the GDPR in its Applicable Data Protection Laws definition.
+      source: https://www.virtuosis.ai/dpa
+    - id: hipaa
+      claim: HIPAA compliant
+      published: true
+      evidence: >-
+        Ethics & Privacy page claims HIPAA compliance and states in-region server deployment can be
+        supported on request for HIPAA or PIPEDA requirements.
+      source: https://www.virtuosis.ai/ethics-privacy
+      independently_verified: false
+      note: No BAA is published or offered on the public surface.
+    - id: iso-27001
+      claim: ISO/IEC 27001 certified infrastructure
+      published: true
+      evidence: >-
+        Ethics & Privacy page states data is stored "within infrastructure certified to ISO/IEC 27001
+        standards" under the heading "Certified servers".
+      source: https://www.virtuosis.ai/ethics-privacy
+      independently_verified: false
+      note: >-
+        Read this claim precisely - it is scoped to the SERVERS/infrastructure, not to a Virtuosis
+        ISMS certificate. No certificate number or certification body is named.
+    - id: hds
+      claim: HDS (Hebergeur de Donnees de Sante) requirements
+      published: true
+      evidence: >-
+        Ethics & Privacy page states data is stored on European servers "designed to meet GDPR and HDS
+        requirements".
+      source: https://www.virtuosis.ai/ethics-privacy
+      independently_verified: false
+      note: Stated as "designed to meet", which is weaker than an HDS certification claim.
+    - id: soc2
+      claim: null
+      published: false
+      evidence: No SOC 2 claim appears anywhere on the public surface.
+    - id: pci-dss
+      claim: null
+      published: false
+      evidence: Not applicable - no cardholder data is handled by this API.
+    - id: fedramp
+      claim: null
+      published: false
+  data_handling:
+    residency: European servers by default; in-region deployment available on request.
+    encryption: TLS in transit, AES-256 at rest "where applicable"
+    controls: role-based least-privilege access, audit logging, data minimization, pseudonymization/de-identification where possible
+    subject_rights: users can access or permanently delete their data at any time
+    sub_processors:
+      published: false
+      obtainable: true
+      contact: privacy@virtuosis.ch
+      note: Appendix A of the DPA says the current sub-processor list is available on request, not published.
+    source: https://www.virtuosis.ai/ethics-privacy
+  clinical:
+    validation_page: https://www.virtuosis.ai/clinical-validation
+    mandatory_ui_disclaimer: >-
+      Not intended to provide a medical diagnosis or to replace clinical judgment. Outputs are for
+      clinical decision support and must be interpreted by a qualified healthcare professional.
+    source: https://docs.virtuosis.ai/guidelines
+summary:
+  technical_conforms: 5
+  technical_does_not_conform: 10
+  compliance_claims_published: 6
+  compliance_claims_independently_verified: 0
+  trust_center: false
+  trust_center_note: >-
+    No dedicated trust portal exists (no trust.virtuosis.ai - DNS does not resolve - and no
+    Vanta/Drata/SafeBase page). The Ethics & Privacy page plus the DPA are the whole compliance
+    surface, and neither offers downloadable evidence.

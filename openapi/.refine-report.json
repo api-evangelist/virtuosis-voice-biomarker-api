@@ -1,0 +1,26 @@
+{
+  "provider": "virtuosis-voice-biomarker-api",
+  "sources": [
+    "virtuosis-voice-biomarker-api-openapi.yml"
+  ],
+  "outputs": [
+    "virtuosis-voice-biomarker-api-default-api-openapi.yml",
+    "virtuosis-voice-biomarker-api-accounts-api-openapi.yml",
+    "virtuosis-voice-biomarker-api-recordings-api-openapi.yml",
+    "virtuosis-voice-biomarker-api-usage-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/virtuosis-voice-biomarker-api-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "virtuosis-voice-biomarker-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: ",
+    "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: accounts",
+    "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: recordings",
+    "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: usage",
+    "apis.yml register: written (+4 apis, 4 total)"
+  ],
+  "skipped": []
+}

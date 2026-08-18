@@ -1,0 +1,108 @@
+openapi: 3.2.0
+info:
+  title: Reference Usage API
+  version: 1.0.0
+servers:
+- url: https://api.virtuosis.ai/v1.3
+  description: https://api.virtuosis.ai/v1.3
+tags:
+- name: usage
+paths:
+  /usage/recordings:
+    get:
+      operationId: getRecordingsUsage
+      summary: Get analysis usage for the organisation
+      description: Returns the organisation's remaining credit balance (trial, included, and purchased buckets) and the granted trial and monthly included allotments.
+      tags:
+      - usage
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer authentication
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingsUsageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access is suspended, or API billing is not provisioned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    ErrorError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Machine-readable error type.
+        message:
+          type: string
+          description: Human-readable description of the error.
+      required:
+      - type
+      - message
+      description: Error details.
+      title: ErrorError
+    RecordingsUsageResponse:
+      type: object
+      properties:
+        trial_remaining:
+          type: integer
+          description: Remaining one-time trial credits. Consumed before included and purchased credits.
+        trial_granted:
+          type: integer
+          description: The trial credit allotment originally granted, for computing trial usage.
+        included_remaining:
+          type: integer
+          description: Remaining monthly included credits for the current billing period. Reset each cycle.
+        included_granted:
+          type: integer
+          description: The tier's monthly included credit allotment, for computing included usage.
+        purchased_remaining:
+          type: integer
+          description: Remaining purchased (credit pack) credits. These roll over until used or refunded.
+        tier:
+          type:
+          - string
+          - 'null'
+          description: The organisation's current subscription tier.
+      required:
+      - trial_remaining
+      - trial_granted
+      - included_remaining
+      - included_granted
+      - purchased_remaining
+      title: RecordingsUsageResponse
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      required:
+      - error
+      title: Error
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

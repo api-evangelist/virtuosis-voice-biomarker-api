@@ -1,0 +1,33 @@
+{
+  "result": {
+    "tools": [
+      {
+        "name": "searchDocs",
+        "description": "Search the documentation at https://docs.virtuosis.ai. Returns relevant doc passages with source URLs.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The search query to run against the docs"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "annotations": {
+          "title": "Search docs.virtuosis.ai Docs",
+          "readOnlyHint": true
+        },
+        "execution": {
+          "taskSupport": "forbidden"
+        }
+      }
+    ]
+  },
+  "jsonrpc": "2.0",
+  "id": 2
+}

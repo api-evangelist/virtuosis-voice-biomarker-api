@@ -1,0 +1,78 @@
+generated: '2026-08-18'
+method: searched
+source: >-
+  Registry searches on 2026-08-18 across npm (registry.npmjs.org search), PyPI, RubyGems, crates.io,
+  Packagist and the GitHub org, plus a full read of docs.virtuosis.ai (8 pages) and
+  www.virtuosis.ai (sitemap, 18 URLs).
+package_count: 0
+official_sdk_count: 0
+packages: []
+registries_searched:
+  - registry: npm
+    query: virtuosis
+    endpoint: https://registry.npmjs.org/-/v1/search?text=virtuosis
+    results: 0
+  - registry: pypi
+    queries: [virtuosis, virtuosis-ai]
+    endpoint: https://pypi.org/pypi/{name}/json
+    status: 404
+    results: 0
+  - registry: rubygems
+    query: virtuosis
+    status: 404
+    results: 0
+  - registry: crates.io
+    query: virtuosis
+    status: 403
+    results: 0
+    note: crates.io rejected the unauthenticated request (403), so this registry is unconfirmed rather than confirmed empty.
+  - registry: packagist
+    query: virtuosis
+    results: 0
+    note: Matches returned were unrelated (Virtuoso triplestore tooling).
+  - registry: maven-central
+    query: virtuosis
+    results: 0
+  - registry: nuget
+    query: virtuosis
+    results: 0
+  - registry: pkg.go.dev
+    query: virtuosis
+    results: 0
+source_repositories:
+  github_org:
+    url: https://github.com/virtuosis-ai
+    verified: true
+    http_status: 200
+    org_name: Virtuosis AI
+    org_blog: https://www.virtuosis.ai
+    created: '2022-10-20'
+    public_repos: 0
+    note: >-
+      The organisation is real and demonstrably theirs (the org's own website field is
+      www.virtuosis.ai), but it publishes zero public repositories - so there is no source-available
+      client, no examples repo and no issue tracker.
+docs_code_samples:
+  present: true
+  languages_generated:
+    - curl
+    - python
+    - javascript
+    - go
+    - java
+    - php
+    - ruby
+    - csharp
+    - swift
+  source: https://docs.virtuosis.ai/api-reference/recordings/upload-recording
+  note: >-
+    Fern auto-generates per-language request snippets on every endpoint page. These are HTTP client
+    snippets (requests, fetch, URLSession), NOT a Virtuosis SDK - they import no Virtuosis package.
+    They are worth having, but they are not client libraries and must not be counted as SDKs.
+finding: >-
+  Virtuosis ships NO client libraries in any language. Integration is raw HTTP against
+  https://api.virtuosis.ai/v1.3 with a bearer token and Base64 audio in a JSON body. Because the
+  provider publishes a clean OpenAPI 3.1.0 with operationIds on every operation, a generated client is
+  a small, mechanical piece of work that would remove the largest ergonomics gap in this profile -
+  particularly the Base64 encoding, the poll loop, and the credit-exhaustion vs rate-limit distinction
+  a hand-rolled client will get wrong.

@@ -1,0 +1,66 @@
+generated: '2026-08-18'
+method: searched
+source: https://www.virtuosis.ai/trial-request
+docs:
+  - https://www.virtuosis.ai/trial-request
+  - https://www.virtuosis.ai/voice-biomarker-api
+  - https://docs.virtuosis.ai/api-reference/usage/get-recordings-usage
+plan_count: 0
+plans: []
+note: >-
+  Virtuosis publishes no pricing page and no named, priced tiers. /pricing and /plans both return 404
+  on www.virtuosis.ai, and the sitemap contains no pricing URL. API access is gated behind a
+  "Request a trial" form at https://www.virtuosis.ai/trial-request, which asks for expected usage and
+  integration needs and states that Virtuosis will follow up - a sales conversation, not a checkout.
+  This is an honest zero, not a missing probe.
+billing_model:
+  confirmed: true
+  type: credit-metered subscription
+  source: https://docs.virtuosis.ai/api-reference/usage/get-recordings-usage
+  evidence: >-
+    The API itself proves the commercial model even though the prices are unpublished. GET
+    /usage/recordings returns a `tier` string plus three credit buckets - trial (one-time, granted
+    allotment), included (monthly, resets each billing cycle) and purchased (credit packs that roll
+    over until used or refunded). So there ARE named subscription tiers with per-tier monthly
+    allotments; the names, allotments and prices are simply not public.
+  faq_statement: >-
+    The homepage FAQ states: "We offer flexible monthly and annual plans based on the required volume.
+    Billing can be arranged directly with us or through one of our partners, such as Microsoft." It also
+    states a demo can include "a free trial code for the web app or a couple of API credits." Volume-based
+    negotiated pricing with no published rate card.
+  faq_source: https://www.virtuosis.ai/#FAQ
+  billing_periods:
+    - monthly
+    - annual
+  channels:
+    - direct
+    - partner (Microsoft, via Microsoft AppSource)
+  observed_tier_example: 'Pro (from the provider''s own documented example response)'
+  note: >-
+    Tier names cannot be enumerated from the public surface. "Pro" appears only inside a documentation
+    example payload and is recorded as an example value, not as a confirmed catalogue of tiers.
+access_gates:
+  - gate: trial-request form
+    url: https://www.virtuosis.ai/trial-request
+    applies_to: API access
+  - gate: manual validation by Virtuosis
+    applies_to:
+      - parkinsons
+      - alzheimers
+    stated_turnaround: within 48 hours
+    reason: >-
+      Medical insights are released only after manual validation, in accordance with the intended
+      purpose of the CE-marked software as a medical device.
+    source: https://www.virtuosis.ai/voice-biomarker-api
+  - gate: none
+    applies_to:
+      - wellbeing
+      - communication_coach
+    note: Wellbeing and communication insights are described as available through self-service access.
+free_tier:
+  exists: true
+  form: trial credits
+  note: >-
+    The usage endpoint exposes trial_granted/trial_remaining, so a trial credit allotment is real, but
+    its size is not published.
+  amount: null

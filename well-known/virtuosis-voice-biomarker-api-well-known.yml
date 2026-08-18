@@ -1,0 +1,86 @@
+generated: '2026-08-18'
+method: probed
+source: >-
+  Direct HTTPS GETs against every host in apis.yml (api.virtuosis.ai, docs.virtuosis.ai,
+  www.virtuosis.ai, virtuosis.ai) plus the OpenAPI servers[] host, on 2026-08-18.
+note: >-
+  One real document was served: an RFC 9727 API catalog linkset at docs.virtuosis.ai, which
+  points at both published OpenAPI versions (v1.3 and v1.2) and their human docs pages. Every
+  other /.well-known/ path 404s. The 404s on docs.virtuosis.ai return an HTML shell (Fern/Vercel
+  docs catch-all) and the 404s on www.virtuosis.ai return a Webflow "Invalid .well-known request"
+  page - neither is a document. No security.txt, no OIDC/OAuth discovery, no agent card.
+hosts:
+  - host: https://docs.virtuosis.ai
+    documents:
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: application/linkset+json; profile="https://www.rfc-editor.org/info/rfc9727"
+        file: virtuosis-voice-biomarker-api-api-catalog.json
+        note: RFC 9727 linkset naming service-desc (OpenAPI YAML) and service-doc for v1.3 and v1.2.
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.virtuosis.ai
+    note: >-
+      The API host answers every unknown path with a JSON 404 envelope
+      ({"statusCode":404,"message":"Resource not found"}), so these are true negatives, not an SPA catch-all.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://www.virtuosis.ai
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://virtuosis.ai
+    documents:
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+summary:
+  paths_probed: 33
+  documents_found: 1
+  security_txt: false
+  oauth_discovery: false
+  agent_card: false

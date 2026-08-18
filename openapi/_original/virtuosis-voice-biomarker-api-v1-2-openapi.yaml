@@ -1,0 +1,739 @@
+openapi: 3.1.0
+info:
+  title: API Reference
+  version: 1.0.0
+paths:
+  /accounts:
+    post:
+      operationId: createAccount
+      summary: Create an account
+      description: >
+        Creates an account that audio recordings and analysis results can be associated with. We recommend creating one
+        account per user.
+      tags:
+        - accounts
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer authentication
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAccountResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access is suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /recordings:
+    post:
+      operationId: uploadRecording
+      summary: Upload a recording for analysis
+      description: |
+        Uploads a Base64-encoded audio file. Analysis processing is triggered on a successful
+        upload and may take up to five minutes to complete.
+
+        Minimum audio requirements:
+        - Format: WAV, MP3, MP4, or OGG
+        - Sample rate: 8,000 Hz
+        - Bit rate: 32,000 bps
+        - Channels: 1 (mono)
+        - Duration: 30 seconds of speech
+        - Maximum file size: 50 MB
+      tags:
+        - recordings
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer authentication
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Recording uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadRecordingResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Requested analysis is not enabled, or access is suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: File too large (max 50 MB)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadRecordingRequest'
+  /recordings/{recording_id}/analysis:
+    get:
+      operationId: getRecordingAnalysis
+      summary: Get analysis results for a recording
+      description: >
+        Poll for analysis results after uploading a recording. To avoid rate limiting, a polling interval of 15-30
+        seconds is recommended (minimum 5 seconds), with a polling timeout of five minutes.
+      tags:
+        - recordings
+      parameters:
+        - name: recording_id
+          in: path
+          description: The ID of the recording.
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: analysis
+          in: query
+          description: 'Comma-separated list of analysis types to include (default: all)'
+          required: false
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Bearer authentication
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingAnalysisResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access is suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Recording not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /usage/recordings:
+    get:
+      operationId: getRecordingsUsage
+      summary: Get analysis usage for the organisation
+      description: Returns the organisation's API upload count and limit for the current billing period.
+      tags:
+        - usage
+      parameters:
+        - name: Authorization
+          in: header
+          description: Bearer authentication
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingsUsageResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access is suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /ping:
+    get:
+      operationId: ping
+      summary: Health check
+      tags:
+        - ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+servers:
+  - url: https://api.virtuosis.ai/v1.2
+    description: https://api.virtuosis.ai/v1.2
+components:
+  schemas:
+    CreateAccountResponseOrganisationRole:
+      type: string
+      enum:
+        - speaker
+      description: The organisation role assigned to the created account. API-created accounts are always speakers.
+      title: CreateAccountResponseOrganisationRole
+    CreateAccountResponse:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the created account.
+        organisation_role:
+          $ref: '#/components/schemas/CreateAccountResponseOrganisationRole'
+          description: The organisation role assigned to the created account. API-created accounts are always speakers.
+      title: CreateAccountResponse
+    ErrorError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Machine-readable error type.
+        message:
+          type: string
+          description: Human-readable description of the error.
+      description: Error details.
+      title: ErrorError
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      title: Error
+    AnalysisType:
+      type: string
+      enum:
+        - wellbeing
+        - parkinsons
+        - alzheimers
+      description: Analysis type identifier.
+      title: AnalysisType
+    UploadRecordingRequest:
+      type: object
+      properties:
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the account submitting the recording.
+        recorded_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of when the recording began.
+        analysis:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalysisType'
+          description: Analysis types to run. Must contain at least one type.
+        audio:
+          type: string
+          description: Base64-encoded audio file.
+      required:
+        - account_id
+        - recorded_at
+        - analysis
+        - audio
+      title: UploadRecordingRequest
+    UploadRecordingResponse:
+      type: object
+      properties:
+        recording_id:
+          type: string
+          format: uuid
+          description: The recording ID used for fetching analysis results.
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the account that submitted the recording.
+        recorded_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of when the recording began.
+        uploaded_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of when the recording was uploaded.
+        audio_file_format:
+          type: string
+          description: Detected audio file format.
+        audio_size_bytes:
+          type: integer
+          description: Audio file size in bytes.
+        audio_sample_rate_hz:
+          type: integer
+          description: Audio sample rate in Hz.
+        audio_bit_rate_bps:
+          type: integer
+          description: Audio bit rate in bits per second.
+        audio_duration_seconds:
+          type: number
+          format: double
+          description: Total audio duration in seconds.
+        speech_duration_seconds:
+          type: number
+          format: double
+          description: Detected speech duration in seconds.
+      title: UploadRecordingResponse
+    RecordingAnalysisMetadata:
+      type: object
+      properties:
+        recording_id:
+          type: string
+          format: uuid
+          description: The ID of the recording.
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the account that submitted the recording.
+        recorded_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of when the recording began.
+        uploaded_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+          description: ISO 8601 timestamp of when the recording was uploaded.
+        audio_file_format:
+          type:
+            - string
+            - 'null'
+          description: Detected audio file format.
+        audio_size_bytes:
+          type:
+            - integer
+            - 'null'
+          description: Audio file size in bytes.
+        audio_duration_seconds:
+          type: number
+          format: double
+          description: Total audio duration in seconds.
+        audio_sample_rate_hz:
+          type:
+            - integer
+            - 'null'
+          description: Audio sample rate in Hz.
+        audio_bit_rate_bps:
+          type:
+            - integer
+            - 'null'
+          description: Audio bit rate in bits per second.
+        speech_duration_seconds:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Detected speech duration in seconds.
+      required:
+        - recording_id
+        - account_id
+        - recorded_at
+        - audio_duration_seconds
+      description: Metadata about the recording.
+      title: RecordingAnalysisMetadata
+    AnalysisStatus:
+      type: string
+      enum:
+        - completed
+        - processing
+        - error
+        - not_requested
+      description: Status of analysis processing.
+      title: AnalysisStatus
+    StressPredictionResult:
+      type: string
+      enum:
+        - low
+        - moderate
+        - high
+      description: Predicted stress level.
+      title: StressPredictionResult
+    StressPrediction:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/StressPredictionResult'
+          description: Predicted stress level.
+      title: StressPrediction
+    AnxietyPredictionResult:
+      type: string
+      enum:
+        - minimal
+        - mild
+        - moderate
+        - severe
+      description: Predicted anxiety level.
+      title: AnxietyPredictionResult
+    AnxietyPrediction:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/AnxietyPredictionResult'
+          description: Predicted anxiety level.
+      title: AnxietyPrediction
+    DepressionPredictionResult:
+      type: string
+      enum:
+        - minimal
+        - moderate
+        - severe
+      description: Predicted depression level.
+      title: DepressionPredictionResult
+    DepressionPrediction:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/DepressionPredictionResult'
+          description: Predicted depression level.
+      title: DepressionPrediction
+    WellbeingPredictions:
+      type: object
+      properties:
+        stress:
+          $ref: '#/components/schemas/StressPrediction'
+          description: Stress prediction.
+        anxiety:
+          $ref: '#/components/schemas/AnxietyPrediction'
+          description: Anxiety prediction.
+        depression:
+          $ref: '#/components/schemas/DepressionPrediction'
+          description: Depression prediction.
+      title: WellbeingPredictions
+    WellbeingAnalysis:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of wellbeing analysis processing.
+        predictions:
+          $ref: '#/components/schemas/WellbeingPredictions'
+          description: Wellbeing predictions.
+      required:
+        - status
+      title: WellbeingAnalysis
+    ParkinsonsIndicators:
+      type: object
+      properties:
+        volume:
+          type:
+            - integer
+            - 'null'
+          description: Mean energy in decibels.
+        monoloudness:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Standard deviation of loudness across the utterance in decibels.
+        monotony:
+          type:
+            - integer
+            - 'null'
+          description: Standard deviation of the fundamental frequency in hertz.
+        articulation:
+          type:
+            - integer
+            - 'null'
+          description: Dynamic range of the second formant in hertz.
+        speech_rate:
+          type:
+            - integer
+            - 'null'
+          description: Mean number of words spoken per minute.
+        speech_rate_stdev:
+          type:
+            - integer
+            - 'null'
+          description: Standard deviation of speech rate in words-per-minute.
+        pause_duration:
+          type:
+            - integer
+            - 'null'
+          description: Mean duration of silent pauses in milliseconds.
+        pause_duration_stdev:
+          type:
+            - integer
+            - 'null'
+          description: Standard deviation of pause duration in milliseconds.
+        voice_quality:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Cepstral peak prominence in decibels.
+        hnr:
+          type:
+            - integer
+            - 'null'
+          description: Harmonics-to-noise ratio in decibels.
+        stuttering:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Word and n-gram repetitions per minute.
+      description: Acoustic and speech indicators used for Parkinson's analysis. Null if analysis did not complete.
+      title: ParkinsonsIndicators
+    ParkinsonsPredictions:
+      type: object
+      properties:
+        risk_score:
+          type:
+            - integer
+            - 'null'
+          description: Parkinson's disease probability.
+        risk_band:
+          type:
+            - string
+            - 'null'
+          description: Parkinson's risk band derived from the risk score.
+      description: Parkinson's risk predictions. Null if analysis did not complete.
+      title: ParkinsonsPredictions
+    ParkinsonsAnalysis:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of Parkinson's analysis processing.
+        indicators:
+          $ref: '#/components/schemas/ParkinsonsIndicators'
+          description: Parkinson's-related acoustic indicators.
+        predictions:
+          $ref: '#/components/schemas/ParkinsonsPredictions'
+          description: Parkinson's disease probability.
+      required:
+        - status
+      title: ParkinsonsAnalysis
+    AlzheimersIndicators:
+      type: object
+      properties:
+        ttr:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Type-token ratio.
+        brunet_index:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Brunet's index.
+        content_ratio:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Ratio of content words to total words.
+        mlu_words:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Mean length of utterance in words.
+        clause_ratio:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Ratio of clauses to utterances.
+        speech_rate:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Mean number of words spoken per minute.
+        speech_rate_stdev:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Standard deviation of speech rate in words-per-minute.
+        avg_pause_duration_ms:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Mean pause duration in milliseconds.
+        pause_filler_words_per_min:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Pause filler words per minute.
+        long_pause_ratio:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Proportion of total audio duration spent in long pauses.
+      description: Linguistic and speech indicators used for Alzheimer's analysis. Null if analysis did not complete.
+      title: AlzheimersIndicators
+    AlzheimersPredictions:
+      type: object
+      properties:
+        hc_probability:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Probability of healthy.
+        mci_probability:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Probability of mild cognitive impairment.
+        ad_probability:
+          type:
+            - number
+            - 'null'
+          format: double
+          description: Probability of Alzheimer's disease.
+        prediction:
+          type:
+            - string
+            - 'null'
+          description: Predicted classification (hc, mci, or ad).
+      description: Alzheimer's classification predictions. Null if analysis did not complete.
+      title: AlzheimersPredictions
+    AlzheimersAnalysis:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of Alzheimer's analysis processing.
+        indicators:
+          $ref: '#/components/schemas/AlzheimersIndicators'
+          description: Alzheimer's-related acoustic indicators.
+        predictions:
+          $ref: '#/components/schemas/AlzheimersPredictions'
+          description: Predicted classification (healthy, mild cognitive impairment, or Alzheimer's disease).
+      required:
+        - status
+      title: AlzheimersAnalysis
+    RecordingAnalysis:
+      type: object
+      properties:
+        wellbeing:
+          $ref: '#/components/schemas/WellbeingAnalysis'
+          description: Wellbeing analysis results.
+        parkinsons:
+          $ref: '#/components/schemas/ParkinsonsAnalysis'
+          description: Parkinson's analysis results.
+        alzheimers:
+          $ref: '#/components/schemas/AlzheimersAnalysis'
+          description: Alzheimer's analysis results.
+      description: Analysis results grouped by type.
+      title: RecordingAnalysis
+    RecordingAnalysisResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/RecordingAnalysisMetadata'
+          description: Metadata about the recording.
+        analysis:
+          $ref: '#/components/schemas/RecordingAnalysis'
+          description: Analysis results grouped by type.
+      required:
+        - metadata
+        - analysis
+      title: RecordingAnalysisResponse
+    RecordingsUsageResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The number of API uploads used in the current billing period.
+        limit:
+          type: integer
+          description: The maximum number of API uploads allowed per billing period.
+      required:
+        - count
+        - limit
+      title: RecordingsUsageResponse
+    PingResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Confirmation message.
+      title: PingResponse
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

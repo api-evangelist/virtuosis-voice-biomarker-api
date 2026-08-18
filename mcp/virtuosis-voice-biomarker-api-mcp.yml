@@ -1,0 +1,55 @@
+generated: '2026-08-18'
+method: probed
+source: https://docs.virtuosis.ai/_mcp/server
+name: Virtuosis AI Docs MCP Server
+status: published
+deployment:
+  mode: remote
+  endpoint: https://docs.virtuosis.ai/_mcp/server
+  transport: streamable-http
+  auth: none
+  verified: probed
+server_info:
+  name: fern-docs-mcp-server
+  version: 1.0.0
+  protocol_version: '2025-06-18'
+  capabilities:
+    tools:
+      listChanged: true
+probe:
+  fetched: '2026-08-18'
+  initialize:
+    http_status: 200
+    content_type: text/event-stream
+  tools_list:
+    http_status: 200
+    tool_count: 1
+    file: virtuosis-voice-biomarker-api-tools-list.json
+install:
+  documented_by_provider: true
+  source: https://docs.virtuosis.ai/llms.txt
+  note: >-
+    The provider's llms.txt instructs AI clients (Claude Code, Cursor, etc.) to connect to the
+    hosted endpoint. There is no npm/PyPI stdio package - the endpoint itself is the product.
+tools:
+  - name: searchDocs
+    title: Search docs.virtuosis.ai Docs
+    description: >-
+      Search the documentation at https://docs.virtuosis.ai. Returns relevant doc passages with source URLs.
+    read_only: true
+    input_schema:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: The search query to run against the docs
+coverage:
+  wraps_rest_api: false
+  note: >-
+    IMPORTANT SCOPE LIMIT. This is a Fern documentation MCP server, not an API MCP server. Its single
+    tool searches the docs corpus; it does NOT expose createAccount, uploadRecording,
+    getRecordingAnalysis, getRecordingsUsage or ping as callable tools. An agent connected to this
+    server can read how to use the Virtuosis API but cannot call it. Recorded here because the
+    endpoint is genuinely hosted, anonymous, and reachable - not because it fronts the biomarker API.
