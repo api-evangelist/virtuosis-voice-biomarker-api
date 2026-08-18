@@ -1,0 +1,67 @@
+name: Virtuosis Voice Biomarker API
+description: >-
+  REST API from Virtuosis AI (an EPFL spinoff) providing AI-based voice biomarker analysis that detects health disorders
+  from short audio recordings. Analysis families include Wellbeing (stress, anxiety, depression), Parkinson's,
+  Alzheimer's/MCI, and Communication Coach. Delivered as CE-marked software as a medical device with Bearer-token
+  authentication.
+url: https://virtuosis-voice-biomarker-api.apievangelist.com/apis.yml
+created: '2026-08-18'
+modified: '2026-08-18'
+specificationVersion: '0.21'
+tags:
+  - digital health
+  - voice biomarkers
+  - speech analysis
+  - acoustic analysis
+  - medical device
+  - mental health
+  - wellbeing
+  - neurodegenerative screening
+  - telehealth
+  - remote monitoring
+  - communication coaching
+  - clinical research
+apis:
+  - name: Virtuosis Voice Biomarker REST API
+    description: >-
+      REST API (v1.3) for voice biomarker analysis: create accounts, upload Base64-encoded audio recordings, poll
+      analysis results, check usage, and health checks. Uses Bearer-token authentication. Documented via Fern with a
+      public OpenAPI contract and agent-native surfaces (hosted docs MCP server and llms.txt).
+    humanURL: https://docs.virtuosis.ai/voice-biomarker-api
+    baseURL: https://api.virtuosis.ai/v1.3
+    tags:
+      - digital health
+      - voice biomarkers
+      - speech analysis
+      - acoustic analysis
+      - medical device
+      - mental health
+      - wellbeing
+      - neurodegenerative screening
+      - telehealth
+      - remote monitoring
+      - communication coaching
+      - clinical research
+    properties:
+      - type: Documentation
+        url: https://docs.virtuosis.ai/
+      - type: Documentation
+        url: https://docs.virtuosis.ai/api-reference
+      - type: OpenAPI
+        url: https://docs.virtuosis.ai/openapi.json
+      - type: OpenAPI
+        url: https://docs.virtuosis.ai/openapi.yaml
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms.txt
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms-full.txt
+      - type: MCPServer
+        url: https://docs.virtuosis.ai/_mcp/server
+maintainers:
+  - FN: Virtuosis Voice Biomarker API
+    url: https://www.virtuosis.ai/
+generated:
+  by: apis.io/add
+  model: claude-opus-4-8
+  confidence: 95
+  at: '2026-08-18T13:13:10.607Z'
