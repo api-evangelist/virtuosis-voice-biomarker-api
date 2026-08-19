@@ -9,7 +9,7 @@ description: >-
 url: https://virtuosis-voice-biomarker-api.apievangelist.com/apis.yml
 created: '2026-08-18'
 modified: '2026-08-19'
-specificationVersion: '0.21'
+specificationVersion: '0.23'
 tags:
   - digital health
   - voice biomarkers
