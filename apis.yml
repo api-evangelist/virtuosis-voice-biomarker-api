@@ -1,181 +1,212 @@
 aid: virtuosis-voice-biomarker-api
 name: Virtuosis Voice Biomarker API
-description: REST API from Virtuosis AI (an EPFL spinoff) providing AI-based voice biomarker analysis
-  that detects health disorders from short audio recordings. Analysis families include Wellbeing (stress,
-  anxiety, depression), Parkinson's, Alzheimer's/MCI, and Communication Coach. Delivered as CE-marked
-  software as a medical device with Bearer-token authentication.
+description: >-
+  Virtuosis exposes a REST API for acoustic/voice-biomarker analysis of speech recordings, delivering health, wellbeing,
+  and communication insights. Applications upload Base64-encoded audio and poll for analysis results across types such
+  as wellbeing, parkinsons, alzheimers, and communication_coach. Access to live API calls requires an approved
+  organization and API key, while documentation, OpenAPI specs, llms.txt, and a hosted MCP server are publicly
+  reachable.
 url: https://virtuosis-voice-biomarker-api.apievangelist.com/apis.yml
 created: '2026-08-18'
-modified: '2026-08-18'
+modified: '2026-08-19'
 specificationVersion: '0.21'
 tags:
-- digital health
-- voice biomarkers
-- speech analysis
-- acoustic analysis
-- medical device
-- mental health
-- wellbeing
-- neurodegenerative screening
-- telehealth
-- remote monitoring
-- communication coaching
-- clinical research
+  - digital health
+  - voice biomarkers
+  - speech analysis
+  - acoustic analysis
+  - medical device
+  - mental health
+  - wellbeing
+  - neurodegenerative screening
+  - telehealth
+  - remote monitoring
+  - communication coaching
+  - clinical research
+  - health AI
+  - clinical decision support
 apis:
-- aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-accounts-api
-  name: Virtuosis Voice Biomarker API Accounts API
-  description: The accounts API from Virtuosis Voice Biomarker API — 1 operation(s) for accounts.
-  humanURL: https://docs.virtuosis.ai/voice-biomarker-api
-  baseURL: https://api.virtuosis.ai/v1.3
-  tags:
-  - accounts
-  properties:
-  - type: OpenAPI
-    url: openapi/virtuosis-voice-biomarker-api-accounts-api-openapi.yml
-  - type: Documentation
-    url: https://docs.virtuosis.ai/
-  - type: Documentation
-    url: https://docs.virtuosis.ai/api-reference
-  - type: LLMsTxt
-    url: https://docs.virtuosis.ai/llms.txt
-  - type: APIReference
-    url: https://docs.virtuosis.ai/api-reference
-  - type: GettingStarted
-    url: https://docs.virtuosis.ai/voice-biomarker-api
-- aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-default-api
-  name: Virtuosis Voice Biomarker API Voice Biomarker Api Default API
-  description: The Voice Biomarker Api Default API from Virtuosis Voice Biomarker API — 1 operation(s)
-    for voice biomarker api default.
-  humanURL: https://docs.virtuosis.ai/voice-biomarker-api
-  baseURL: https://api.virtuosis.ai/v1.3
-  tags:
-  - Voice Biomarker Api Default
-  properties:
-  - type: OpenAPI
-    url: openapi/virtuosis-voice-biomarker-api-default-api-openapi.yml
-  - type: Documentation
-    url: https://docs.virtuosis.ai/
-  - type: Documentation
-    url: https://docs.virtuosis.ai/api-reference
-  - type: LLMsTxt
-    url: https://docs.virtuosis.ai/llms.txt
-  - type: APIReference
-    url: https://docs.virtuosis.ai/api-reference
-  - type: GettingStarted
-    url: https://docs.virtuosis.ai/voice-biomarker-api
-- aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-recordings-api
-  name: Virtuosis Voice Biomarker API Recordings API
-  description: The recordings API from Virtuosis Voice Biomarker API — 2 operation(s) for recordings.
-  humanURL: https://docs.virtuosis.ai/voice-biomarker-api
-  baseURL: https://api.virtuosis.ai/v1.3
-  tags:
-  - recordings
-  properties:
-  - type: OpenAPI
-    url: openapi/virtuosis-voice-biomarker-api-recordings-api-openapi.yml
-  - type: Documentation
-    url: https://docs.virtuosis.ai/
-  - type: Documentation
-    url: https://docs.virtuosis.ai/api-reference
-  - type: LLMsTxt
-    url: https://docs.virtuosis.ai/llms.txt
-  - type: APIReference
-    url: https://docs.virtuosis.ai/api-reference
-  - type: GettingStarted
-    url: https://docs.virtuosis.ai/voice-biomarker-api
-- aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-usage-api
-  name: Virtuosis Voice Biomarker API Usage API
-  description: The usage API from Virtuosis Voice Biomarker API — 1 operation(s) for usage.
-  humanURL: https://docs.virtuosis.ai/voice-biomarker-api
-  baseURL: https://api.virtuosis.ai/v1.3
-  tags:
-  - usage
-  properties:
-  - type: OpenAPI
-    url: openapi/virtuosis-voice-biomarker-api-usage-api-openapi.yml
-  - type: Documentation
-    url: https://docs.virtuosis.ai/
-  - type: Documentation
-    url: https://docs.virtuosis.ai/api-reference
-  - type: LLMsTxt
-    url: https://docs.virtuosis.ai/llms.txt
-  - type: APIReference
-    url: https://docs.virtuosis.ai/api-reference
-  - type: GettingStarted
-    url: https://docs.virtuosis.ai/voice-biomarker-api
+  - aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-accounts-api
+    name: Virtuosis Voice Biomarker API Accounts API
+    description: The accounts API from Virtuosis Voice Biomarker API — 1 operation(s) for accounts.
+    humanURL: https://docs.virtuosis.ai/voice-biomarker-api
+    baseURL: https://api.virtuosis.ai/v1.3
+    tags:
+      - accounts
+    properties:
+      - type: OpenAPI
+        url: openapi/virtuosis-voice-biomarker-api-accounts-api-openapi.yml
+      - type: Documentation
+        url: https://docs.virtuosis.ai/
+      - type: Documentation
+        url: https://docs.virtuosis.ai/api-reference
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms.txt
+      - type: APIReference
+        url: https://docs.virtuosis.ai/api-reference
+      - type: GettingStarted
+        url: https://docs.virtuosis.ai/voice-biomarker-api
+  - aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-default-api
+    name: Virtuosis Voice Biomarker API Voice Biomarker Api Default API
+    description: >-
+      The Voice Biomarker Api Default API from Virtuosis Voice Biomarker API — 1 operation(s) for voice biomarker api
+      default.
+    humanURL: https://docs.virtuosis.ai/voice-biomarker-api
+    baseURL: https://api.virtuosis.ai/v1.3
+    tags:
+      - Voice Biomarker Api Default
+    properties:
+      - type: OpenAPI
+        url: openapi/virtuosis-voice-biomarker-api-default-api-openapi.yml
+      - type: Documentation
+        url: https://docs.virtuosis.ai/
+      - type: Documentation
+        url: https://docs.virtuosis.ai/api-reference
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms.txt
+      - type: APIReference
+        url: https://docs.virtuosis.ai/api-reference
+      - type: GettingStarted
+        url: https://docs.virtuosis.ai/voice-biomarker-api
+  - aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-recordings-api
+    name: Virtuosis Voice Biomarker API Recordings API
+    description: The recordings API from Virtuosis Voice Biomarker API — 2 operation(s) for recordings.
+    humanURL: https://docs.virtuosis.ai/voice-biomarker-api
+    baseURL: https://api.virtuosis.ai/v1.3
+    tags:
+      - recordings
+    properties:
+      - type: OpenAPI
+        url: openapi/virtuosis-voice-biomarker-api-recordings-api-openapi.yml
+      - type: Documentation
+        url: https://docs.virtuosis.ai/
+      - type: Documentation
+        url: https://docs.virtuosis.ai/api-reference
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms.txt
+      - type: APIReference
+        url: https://docs.virtuosis.ai/api-reference
+      - type: GettingStarted
+        url: https://docs.virtuosis.ai/voice-biomarker-api
+  - aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-usage-api
+    name: Virtuosis Voice Biomarker API Usage API
+    description: The usage API from Virtuosis Voice Biomarker API — 1 operation(s) for usage.
+    humanURL: https://docs.virtuosis.ai/voice-biomarker-api
+    baseURL: https://api.virtuosis.ai/v1.3
+    tags:
+      - usage
+    properties:
+      - type: OpenAPI
+        url: openapi/virtuosis-voice-biomarker-api-usage-api-openapi.yml
+      - type: Documentation
+        url: https://docs.virtuosis.ai/
+      - type: Documentation
+        url: https://docs.virtuosis.ai/api-reference
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms.txt
+      - type: APIReference
+        url: https://docs.virtuosis.ai/api-reference
+      - type: GettingStarted
+        url: https://docs.virtuosis.ai/voice-biomarker-api
+  - name: Virtuosis Voice Biomarker API
+    description: >-
+      REST API to upload speech recordings and retrieve health, wellbeing, and communication insights via voice
+      biomarker analysis. Bearer token authentication; access gated to approved organizations.
+    humanURL: https://docs.virtuosis.ai/api-reference
+    baseURL: https://api.virtuosis.ai/v1.3
+    tags:
+      - voice biomarkers
+      - speech analysis
+      - digital health
+      - health AI
+      - acoustic analysis
+      - wellbeing
+      - medical device
+      - clinical decision support
+    properties:
+      - type: OpenAPI
+        url: https://docs.virtuosis.ai/openapi/api-reference.yaml
+      - type: Documentation
+        url: https://docs.virtuosis.ai/voice-biomarker-api
+      - type: LLMsTxt
+        url: https://docs.virtuosis.ai/llms.txt
+      - type: MCPServer
+        url: https://docs.virtuosis.ai/_mcp/server
 image: https://cdn.prod.website-files.com/6655f0e4b329b0c698166458/66aaae517c99095814345e2e_Virtuosis256.png
 maintainers:
-- FN: Virtuosis Artificial Intelligence SA
-  url: https://www.virtuosis.ai/
-  email: privacy@virtuosis.ch
+  - FN: Virtuosis Artificial Intelligence SA
+    url: https://www.virtuosis.ai/
+    email: privacy@virtuosis.ch
+  - FN: Virtuosis Voice Biomarker API
+    url: https://www.virtuosis.ai/
 generated:
   by: apis.io/add
   model: claude-opus-4-8
   confidence: 95
-  at: '2026-08-18T13:13:10.607Z'
+  at: '2026-08-19T07:26:04.521Z'
 common:
-- type: MCPServer
-  url: https://docs.virtuosis.ai/_mcp/server
-- type: Overlay
-  url: overlays/virtuosis-voice-biomarker-api-openapi-overlay.yaml
-- type: DomainSecurity
-  url: security/virtuosis-voice-biomarker-api-domain-security.yml
-- type: Authentication
-  url: authentication/virtuosis-voice-biomarker-api-authentication.yml
-- type: WellKnown
-  url: well-known/virtuosis-voice-biomarker-api-well-known.yml
-- type: APICatalog
-  url: well-known/virtuosis-voice-biomarker-api-api-catalog.json
-- type: MCPServer
-  url: mcp/virtuosis-voice-biomarker-api-mcp.yml
-- type: ToolCrosswalk
-  url: mcp/virtuosis-voice-biomarker-api-tool-crosswalk.yml
-- type: LLMsTxt
-  url: llms/virtuosis-voice-biomarker-api-llms.txt
-- type: AgentSkill
-  url: skills/_index.yml
-- type: Conventions
-  url: conventions/virtuosis-voice-biomarker-api-conventions.yml
-- type: ErrorCatalog
-  url: errors/virtuosis-voice-biomarker-api-problem-types.yml
-- type: Lifecycle
-  url: lifecycle/virtuosis-voice-biomarker-api-lifecycle.yml
-- type: Conformance
-  url: conformance/virtuosis-voice-biomarker-api-conformance.yml
-- type: Compliance
-  url: conformance/virtuosis-voice-biomarker-api-conformance.yml
-- type: DataModel
-  url: data-model/virtuosis-voice-biomarker-api-data-model.yml
-- type: Plans
-  url: plans/virtuosis-voice-biomarker-api-plans-pricing.yml
-- type: RateLimits
-  url: rate-limits/virtuosis-voice-biomarker-api-rate-limits.yml
-- type: DeveloperPortal
-  url: https://docs.virtuosis.ai/
-- type: Documentation
-  url: https://docs.virtuosis.ai/voice-biomarker-api
-- type: APIReference
-  url: https://docs.virtuosis.ai/api-reference
-- type: GettingStarted
-  url: https://docs.virtuosis.ai/voice-biomarker-api
-- type: Support
-  url: https://www.virtuosis.ai/contact-us
-- type: HelpCenter
-  url: https://www.virtuosis.ai/#FAQ
-- type: Blog
-  url: https://www.virtuosis.ai/news
-- type: GitHubOrganization
-  url: https://github.com/virtuosis-ai
-- type: SignUp
-  url: https://www.virtuosis.ai/trial-request
-- type: Login
-  url: https://app.virtuosis.ai/
-- type: TermsOfService
-  url: https://www.virtuosis.ai/terms-of-service
-- type: PrivacyPolicy
-  url: https://www.virtuosis.ai/privacy-policy
-- type: Website
-  url: https://www.virtuosis.ai/
+  - type: MCPServer
+    url: https://docs.virtuosis.ai/_mcp/server
+  - type: Overlay
+    url: overlays/virtuosis-voice-biomarker-api-openapi-overlay.yaml
+  - type: DomainSecurity
+    url: security/virtuosis-voice-biomarker-api-domain-security.yml
+  - type: Authentication
+    url: authentication/virtuosis-voice-biomarker-api-authentication.yml
+  - type: WellKnown
+    url: well-known/virtuosis-voice-biomarker-api-well-known.yml
+  - type: APICatalog
+    url: well-known/virtuosis-voice-biomarker-api-api-catalog.json
+  - type: MCPServer
+    url: mcp/virtuosis-voice-biomarker-api-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/virtuosis-voice-biomarker-api-tool-crosswalk.yml
+  - type: LLMsTxt
+    url: llms/virtuosis-voice-biomarker-api-llms.txt
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Conventions
+    url: conventions/virtuosis-voice-biomarker-api-conventions.yml
+  - type: ErrorCatalog
+    url: errors/virtuosis-voice-biomarker-api-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/virtuosis-voice-biomarker-api-lifecycle.yml
+  - type: Conformance
+    url: conformance/virtuosis-voice-biomarker-api-conformance.yml
+  - type: Compliance
+    url: conformance/virtuosis-voice-biomarker-api-conformance.yml
+  - type: DataModel
+    url: data-model/virtuosis-voice-biomarker-api-data-model.yml
+  - type: Plans
+    url: plans/virtuosis-voice-biomarker-api-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/virtuosis-voice-biomarker-api-rate-limits.yml
+  - type: DeveloperPortal
+    url: https://docs.virtuosis.ai/
+  - type: Documentation
+    url: https://docs.virtuosis.ai/voice-biomarker-api
+  - type: APIReference
+    url: https://docs.virtuosis.ai/api-reference
+  - type: GettingStarted
+    url: https://docs.virtuosis.ai/voice-biomarker-api
+  - type: Support
+    url: https://www.virtuosis.ai/contact-us
+  - type: HelpCenter
+    url: https://www.virtuosis.ai/#FAQ
+  - type: Blog
+    url: https://www.virtuosis.ai/news
+  - type: GitHubOrganization
+    url: https://github.com/virtuosis-ai
+  - type: SignUp
+    url: https://www.virtuosis.ai/trial-request
+  - type: Login
+    url: https://app.virtuosis.ai/
+  - type: TermsOfService
+    url: https://www.virtuosis.ai/terms-of-service
+  - type: PrivacyPolicy
+    url: https://www.virtuosis.ai/privacy-policy
+  - type: Website
+    url: https://www.virtuosis.ai/
 x-enrichment:
   date: '2026-08-18'
   status: enriched
