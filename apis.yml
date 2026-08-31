@@ -23,20 +23,20 @@ created: '2026-08-18'
 modified: '2026-08-19'
 specificationVersion: '0.23'
 tags:
-  - Digital Health
+  - digital health
   - voice biomarkers
   - speech analysis
   - acoustic analysis
-  - Medical Device
-  - Mental Health
-  - Wellbeing
+  - medical device
+  - mental health
+  - wellbeing
   - neurodegenerative screening
-  - Telehealth
-  - Remote Monitoring
+  - telehealth
+  - remote monitoring
   - communication coaching
-  - Clinical Research
-  - Health AI
-  - Clinical Decision Support
+  - clinical research
+  - health AI
+  - clinical decision support
 tags_raw:
   - digital health
   - voice biomarkers
@@ -103,7 +103,7 @@ apis:
   humanURL: https://docs.virtuosis.ai/voice-biomarker-api
   baseURL: https://api.virtuosis.ai/v1.3
   tags:
-  - Recordings
+  - recordings
   tags_raw:
   - recordings
   properties:
