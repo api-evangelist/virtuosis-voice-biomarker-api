@@ -9,6 +9,11 @@ deployment:
   transport: streamable-http
   auth: none
   verified: probed
+  probe_prior: (never probed)
+  probe: live
+  probe_why: live
+  checked: '2026-09-11'
+  source: claimed-backlog re-probe 2026-09-11
 server_info:
   name: fern-docs-mcp-server
   version: 1.0.0
@@ -28,28 +33,26 @@ probe:
 install:
   documented_by_provider: true
   source: https://docs.virtuosis.ai/llms.txt
-  note: >-
-    The provider's llms.txt instructs AI clients (Claude Code, Cursor, etc.) to connect to the
-    hosted endpoint. There is no npm/PyPI stdio package - the endpoint itself is the product.
+  note: The provider's llms.txt instructs AI clients (Claude Code, Cursor, etc.) to connect to the hosted
+    endpoint. There is no npm/PyPI stdio package - the endpoint itself is the product.
 tools:
-  - name: searchDocs
-    title: Search docs.virtuosis.ai Docs
-    description: >-
-      Search the documentation at https://docs.virtuosis.ai. Returns relevant doc passages with source URLs.
-    read_only: true
-    input_schema:
-      type: object
-      required:
-        - query
-      properties:
-        query:
-          type: string
-          description: The search query to run against the docs
+- name: searchDocs
+  title: Search docs.virtuosis.ai Docs
+  description: Search the documentation at https://docs.virtuosis.ai. Returns relevant doc passages with
+    source URLs.
+  read_only: true
+  input_schema:
+    type: object
+    required:
+    - query
+    properties:
+      query:
+        type: string
+        description: The search query to run against the docs
 coverage:
   wraps_rest_api: false
-  note: >-
-    IMPORTANT SCOPE LIMIT. This is a Fern documentation MCP server, not an API MCP server. Its single
-    tool searches the docs corpus; it does NOT expose createAccount, uploadRecording,
-    getRecordingAnalysis, getRecordingsUsage or ping as callable tools. An agent connected to this
-    server can read how to use the Virtuosis API but cannot call it. Recorded here because the
-    endpoint is genuinely hosted, anonymous, and reachable - not because it fronts the biomarker API.
+  note: IMPORTANT SCOPE LIMIT. This is a Fern documentation MCP server, not an API MCP server. Its single
+    tool searches the docs corpus; it does NOT expose createAccount, uploadRecording, getRecordingAnalysis,
+    getRecordingsUsage or ping as callable tools. An agent connected to this server can read how to use
+    the Virtuosis API but cannot call it. Recorded here because the endpoint is genuinely hosted, anonymous,
+    and reachable - not because it fronts the biomarker API.
