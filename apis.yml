@@ -41,7 +41,7 @@ tags:
   - voice biomarkers
   - Speech Analysis
   - acoustic analysis
-  - Medical Device
+  - Medical Devices
   - Mental Health
   - Wellbeing
   - neurodegenerative screening
@@ -117,7 +117,7 @@ apis:
   humanURL: https://docs.virtuosis.ai/voice-biomarker-api
   baseURL: https://api.virtuosis.ai/v1.3
   tags:
-  - Recordings
+  - Recording
   tags_raw:
   - recordings
   properties:
