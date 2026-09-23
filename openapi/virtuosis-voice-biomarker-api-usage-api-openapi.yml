@@ -6,7 +6,7 @@ servers:
 - url: https://api.virtuosis.ai/v1.3
   description: https://api.virtuosis.ai/v1.3
 tags:
-- name: usage
+- name: Usage
 paths:
   /usage/recordings:
     get:
@@ -14,7 +14,7 @@ paths:
       summary: Get analysis usage for the organisation
       description: Returns the organisation's remaining credit balance (trial, included, and purchased buckets) and the granted trial and monthly included allotments.
       tags:
-      - usage
+      - Usage
       parameters:
       - name: Authorization
         in: header
@@ -49,20 +49,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    ErrorError:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Machine-readable error type.
-        message:
-          type: string
-          description: Human-readable description of the error.
-      required:
-      - type
-      - message
-      description: Error details.
-      title: ErrorError
     RecordingsUsageResponse:
       type: object
       properties:
@@ -102,6 +88,20 @@ components:
       required:
       - error
       title: Error
+    ErrorError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Machine-readable error type.
+        message:
+          type: string
+          description: Human-readable description of the error.
+      required:
+      - type
+      - message
+      description: Error details.
+      title: ErrorError
   securitySchemes:
     bearerAuth:
       type: http

@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Reference  API
+  title: Reference API
   version: 1.0.0
 servers:
 - url: https://api.virtuosis.ai/v1.3
