@@ -4,23 +4,27 @@
     "_original/virtuosis-voice-biomarker-api-openapi.yml"
   ],
   "outputs": [
-    "virtuosis-voice-biomarker-api-default-api-openapi.yml",
+    "virtuosis-voice-biomarker-api-ping-api-openapi.yml",
     "virtuosis-voice-biomarker-api-accounts-api-openapi.yml",
     "virtuosis-voice-biomarker-api-recordings-api-openapi.yml",
     "virtuosis-voice-biomarker-api-usage-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
     "4 archived document(s) dropped as subsets of other archived documents",
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "virtuosis-voice-biomarker-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: ",
+    "virtuosis-voice-biomarker-api-openapi.yml: tagged paths GET /ping -> Ping",
+    "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: Ping",
     "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: accounts",
     "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: recordings",
     "virtuosis-voice-biomarker-api-openapi.yml: declared missing tag: usage",
-    "apis.yml register: already-registered"
+    "superseded outputs removed: virtuosis-voice-biomarker-api-default-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 4 total)"
   ],
   "skipped": [
     "_original/virtuosis-voice-biomarker-api-v1-3-openapi.yaml: archived document superseded by a larger archived document",

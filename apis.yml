@@ -89,28 +89,6 @@ apis:
     url: https://docs.virtuosis.ai/api-reference
   - type: GettingStarted
     url: https://docs.virtuosis.ai/voice-biomarker-api
-- aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-default-api
-  name: Virtuosis Voice Biomarker API Voice Biomarker Api Default API
-  description: >-
-    The Voice Biomarker Api Default API from Virtuosis Voice Biomarker API — 1 operation(s) for voice
-    biomarker api default.
-  humanURL: https://docs.virtuosis.ai/voice-biomarker-api
-  baseURL: https://api.virtuosis.ai/v1.3
-  tags:
-  - Voice Biomarker Api Default
-  properties:
-  - type: OpenAPI
-    url: openapi/virtuosis-voice-biomarker-api-default-api-openapi.yml
-  - type: Documentation
-    url: https://docs.virtuosis.ai/
-  - type: Documentation
-    url: https://docs.virtuosis.ai/api-reference
-  - type: LLMsTxt
-    url: https://docs.virtuosis.ai/llms.txt
-  - type: APIReference
-    url: https://docs.virtuosis.ai/api-reference
-  - type: GettingStarted
-    url: https://docs.virtuosis.ai/voice-biomarker-api
 - aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-recordings-api
   name: Virtuosis Voice Biomarker API Recordings API
   description: The recordings API from Virtuosis Voice Biomarker API — 2 operation(s) for recordings.
@@ -145,6 +123,26 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/virtuosis-voice-biomarker-api-usage-api-openapi.yml
+  - type: Documentation
+    url: https://docs.virtuosis.ai/
+  - type: Documentation
+    url: https://docs.virtuosis.ai/api-reference
+  - type: LLMsTxt
+    url: https://docs.virtuosis.ai/llms.txt
+  - type: APIReference
+    url: https://docs.virtuosis.ai/api-reference
+  - type: GettingStarted
+    url: https://docs.virtuosis.ai/voice-biomarker-api
+- aid: virtuosis-voice-biomarker-api:virtuosis-voice-biomarker-api-ping-api
+  name: Virtuosis Voice Biomarker API Ping API
+  description: The Ping API from Virtuosis Voice Biomarker API — 1 operation(s) for ping.
+  humanURL: https://docs.virtuosis.ai/voice-biomarker-api
+  baseURL: https://api.virtuosis.ai/v1.3
+  tags:
+  - Ping
+  properties:
+  - type: OpenAPI
+    url: openapi/virtuosis-voice-biomarker-api-ping-api-openapi.yml
   - type: Documentation
     url: https://docs.virtuosis.ai/
   - type: Documentation

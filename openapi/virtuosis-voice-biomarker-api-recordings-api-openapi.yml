@@ -163,6 +163,15 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    AnalysisStatus:
+      type: string
+      enum:
+      - completed
+      - processing
+      - error
+      - not_requested
+      description: Status of analysis processing.
+      title: AnalysisStatus
     UploadRecordingResponse:
       type: object
       properties:
@@ -220,69 +229,31 @@ components:
       - audio_duration_seconds
       - speech_duration_seconds
       title: UploadRecordingResponse
-    CommunicationCoachInsights:
+    WellbeingAnalysis:
       type: object
       properties:
-        rhythm:
-          $ref: '#/components/schemas/CommunicationCoachInsight'
-          description: Score reflecting the balance between speech and pauses.
-        clarity:
-          $ref: '#/components/schemas/CommunicationCoachInsight'
-          description: Score reflecting the proportion of intelligible speech.
-        positiveness:
-          $ref: '#/components/schemas/CommunicationCoachInsight'
-          description: Score reflecting the proportion of speech with a positive tone.
-        speaking_rate:
-          $ref: '#/components/schemas/CommunicationCoachInsight'
-          description: Score reflecting how closely the speaker's word rate matches the ideal words-per-minute rate.
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of wellbeing analysis processing.
+        insights:
+          $ref: '#/components/schemas/WellbeingInsights'
+          description: Wellbeing insights keyed by condition.
       required:
-      - rhythm
-      - clarity
-      - positiveness
-      - speaking_rate
-      description: Communication coach insights keyed by aspect. Present only when analysis completed.
-      title: CommunicationCoachInsights
-    CommunicationCoachIndicators:
+      - status
+      title: WellbeingAnalysis
+    WellbeingInsights:
       type: object
       properties:
-        word_rate:
-          type: integer
-          description: Words spoken per minute.
-        fragment_rate:
-          type: integer
-          description: Speech fragments per minute.
-        filler_words_rate:
-          type: number
-          format: double
-          description: Filler words per minute.
-      required:
-      - word_rate
-      - fragment_rate
-      - filler_words_rate
-      description: Speech quantities measured from the audio. Present only when analysis completed.
-      title: CommunicationCoachIndicators
-    CognitionInsight:
-      type: object
-      properties:
-        rating:
-          type: string
-          description: Predicted classification (hc, mci, or ad).
-        scores:
-          $ref: '#/components/schemas/CognitionScores'
-          description: Class probability distribution.
-      description: 'Cognition insight. Omitted if analysis did not complete; rating and scores are omitted when unavailable.
-
-        '
-      title: CognitionInsight
-    Error:
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorError'
-          description: Error details.
-      required:
-      - error
-      title: Error
+        stress:
+          $ref: '#/components/schemas/StressInsight'
+          description: Stress insight.
+        anxiety:
+          $ref: '#/components/schemas/AnxietyInsight'
+          description: Anxiety insight.
+        depression:
+          $ref: '#/components/schemas/DepressionInsight'
+          description: Depression insight.
+      title: WellbeingInsights
     UploadRecordingRequest:
       type: object
       properties:
@@ -314,110 +285,13 @@ components:
       - analysis
       - audio
       title: UploadRecordingRequest
-    CognitionScores:
+    AlzheimersInsights:
       type: object
       properties:
-        hc:
-          type: number
-          format: double
-          description: Probability of healthy.
-        mci:
-          type: number
-          format: double
-          description: Probability of mild cognitive impairment.
-        ad:
-          type: number
-          format: double
-          description: Probability of Alzheimer's disease.
-      description: Class probability distribution. Individual probabilities are omitted when unavailable.
-      title: CognitionScores
-    StressInsight:
-      type: object
-      properties:
-        rating:
-          $ref: '#/components/schemas/StressInsightRating'
-          description: Predicted stress level.
-      required:
-      - rating
-      title: StressInsight
-    ParkinsonsAnalysis:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AnalysisStatus'
-          description: Status of Parkinson's analysis processing.
-        indicators:
-          $ref: '#/components/schemas/ParkinsonsIndicators'
-          description: Parkinson's-related acoustic indicators.
-        insights:
-          $ref: '#/components/schemas/ParkinsonsInsights'
-          description: Parkinson's insights keyed by condition.
-      required:
-      - status
-      title: ParkinsonsAnalysis
-    RecordingAnalysis:
-      type: object
-      properties:
-        wellbeing:
-          $ref: '#/components/schemas/WellbeingAnalysis'
-          description: Wellbeing analysis results.
-        parkinsons:
-          $ref: '#/components/schemas/ParkinsonsAnalysis'
-          description: Parkinson's analysis results.
-        alzheimers:
-          $ref: '#/components/schemas/AlzheimersAnalysis'
-          description: Alzheimer's analysis results.
-        communication_coach:
-          $ref: '#/components/schemas/CommunicationCoachAnalysis'
-          description: Communication coach analysis results.
-      description: Analysis results grouped by type.
-      title: RecordingAnalysis
-    WellbeingInsights:
-      type: object
-      properties:
-        stress:
-          $ref: '#/components/schemas/StressInsight'
-          description: Stress insight.
-        anxiety:
-          $ref: '#/components/schemas/AnxietyInsight'
-          description: Anxiety insight.
-        depression:
-          $ref: '#/components/schemas/DepressionInsight'
-          description: Depression insight.
-      title: WellbeingInsights
-    ParkinsonsInsight:
-      type: object
-      properties:
-        rating:
-          type: string
-          description: Parkinson's risk band derived from the risk score.
-        score:
-          type: integer
-          description: Parkinson's disease probability.
-      description: 'Parkinson''s risk insight. Omitted if analysis did not complete; rating and score are omitted when unavailable.
-
-        '
-      title: ParkinsonsInsight
-    StressInsightRating:
-      type: string
-      enum:
-      - low
-      - moderate
-      - high
-      description: Predicted stress level.
-      title: StressInsightRating
-    WellbeingAnalysis:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AnalysisStatus'
-          description: Status of wellbeing analysis processing.
-        insights:
-          $ref: '#/components/schemas/WellbeingInsights'
-          description: Wellbeing insights keyed by condition.
-      required:
-      - status
-      title: WellbeingAnalysis
+        cognition:
+          $ref: '#/components/schemas/CognitionInsight'
+          description: Cognition insight.
+      title: AlzheimersInsights
     AnxietyInsight:
       type: object
       properties:
@@ -427,96 +301,14 @@ components:
       required:
       - rating
       title: AnxietyInsight
-    RecordingAnalysisResponse:
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/RecordingAnalysisMetadata'
-          description: Metadata about the recording.
-        analysis:
-          $ref: '#/components/schemas/RecordingAnalysis'
-          description: Analysis results grouped by type.
-      required:
-      - metadata
-      - analysis
-      title: RecordingAnalysisResponse
-    RecordingAnalysisMetadata:
-      type: object
-      properties:
-        recording_id:
-          type: string
-          format: uuid
-          description: The ID of the recording.
-        account_id:
-          type: string
-          format: uuid
-          description: The ID of the account that submitted the recording.
-        recorded_at:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp of when the recording began.
-        uploaded_at:
-          type: string
-          format: date-time
-          description: ISO 8601 timestamp of when the recording was uploaded. Omitted when unavailable.
-        audio_file_format:
-          type: string
-          description: Detected audio file format. Omitted when unavailable.
-        audio_size_bytes:
-          type: integer
-          description: Audio file size in bytes. Omitted when unavailable.
-        audio_duration_seconds:
-          type: number
-          format: double
-          description: Total audio duration in seconds.
-        audio_sample_rate_hz:
-          type: integer
-          description: Audio sample rate in Hz. Omitted when unavailable.
-        audio_bit_rate_bps:
-          type: integer
-          description: Audio bit rate in bits per second. Omitted when unavailable.
-        speech_duration_seconds:
-          type: number
-          format: double
-          description: Detected speech duration in seconds. Omitted when unavailable.
-      required:
-      - recording_id
-      - account_id
-      - recorded_at
-      - audio_duration_seconds
-      description: Metadata about the recording.
-      title: RecordingAnalysisMetadata
-    AnalysisType:
+    StressInsightRating:
       type: string
       enum:
-      - wellbeing
-      - parkinsons
-      - alzheimers
-      - communication_coach
-      description: Analysis type identifier.
-      title: AnalysisType
-    CommunicationCoachAnalysis:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AnalysisStatus'
-          description: Status of communication coach analysis processing.
-        indicators:
-          $ref: '#/components/schemas/CommunicationCoachIndicators'
-          description: Communication-related speech indicators.
-        insights:
-          $ref: '#/components/schemas/CommunicationCoachInsights'
-          description: Communication coach scores.
-      required:
-      - status
-      title: CommunicationCoachAnalysis
-    AlzheimersInsights:
-      type: object
-      properties:
-        cognition:
-          $ref: '#/components/schemas/CognitionInsight'
-          description: Cognition insight.
-      title: AlzheimersInsights
+      - low
+      - moderate
+      - high
+      description: Predicted stress level.
+      title: StressInsightRating
     AnxietyInsightRating:
       type: string
       enum:
@@ -526,80 +318,6 @@ components:
       - severe
       description: Predicted anxiety level.
       title: AnxietyInsightRating
-    ParkinsonsInsights:
-      type: object
-      properties:
-        parkinsons:
-          $ref: '#/components/schemas/ParkinsonsInsight'
-          description: Parkinson's risk insight.
-      title: ParkinsonsInsights
-    ParkinsonsIndicators:
-      type: object
-      properties:
-        volume:
-          type: integer
-          description: Mean energy in decibels.
-        monoloudness:
-          type: number
-          format: double
-          description: Standard deviation of loudness across the utterance in decibels.
-        monotony:
-          type: integer
-          description: Standard deviation of the fundamental frequency in hertz.
-        articulation:
-          type: integer
-          description: Dynamic range of the second formant in hertz.
-        speech_rate:
-          type: integer
-          description: Mean number of words spoken per minute.
-        speech_rate_stdev:
-          type: integer
-          description: Standard deviation of speech rate in words-per-minute.
-        pause_duration:
-          type: integer
-          description: Mean duration of silent pauses in milliseconds.
-        pause_duration_stdev:
-          type: integer
-          description: Standard deviation of pause duration in milliseconds.
-        voice_quality:
-          type: number
-          format: double
-          description: Cepstral peak prominence in decibels.
-        hnr:
-          type: integer
-          description: Harmonics-to-noise ratio in decibels.
-        stuttering:
-          type: number
-          format: double
-          description: Word and n-gram repetitions per minute.
-      description: 'Acoustic and speech indicators used for Parkinson''s analysis. Omitted if analysis did not complete; individual indicators are omitted when unavailable.
-
-        '
-      title: ParkinsonsIndicators
-    AnalysisStatus:
-      type: string
-      enum:
-      - completed
-      - processing
-      - error
-      - not_requested
-      description: Status of analysis processing.
-      title: AnalysisStatus
-    AlzheimersAnalysis:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AnalysisStatus'
-          description: Status of Alzheimer's analysis processing.
-        indicators:
-          $ref: '#/components/schemas/AlzheimersIndicators'
-          description: Alzheimer's-related linguistic indicators.
-        insights:
-          $ref: '#/components/schemas/AlzheimersInsights'
-          description: Cognition insights keyed by condition.
-      required:
-      - status
-      title: AlzheimersAnalysis
     AlzheimersIndicators:
       type: object
       properties:
@@ -647,15 +365,150 @@ components:
 
         '
       title: AlzheimersIndicators
-    DepressionInsight:
+    CognitionInsight:
       type: object
       properties:
         rating:
-          $ref: '#/components/schemas/DepressionInsightRating'
-          description: Predicted depression level.
+          type: string
+          description: Predicted classification (hc, mci, or ad).
+        scores:
+          $ref: '#/components/schemas/CognitionScores'
+          description: Class probability distribution.
+      description: 'Cognition insight. Omitted if analysis did not complete; rating and scores are omitted when unavailable.
+
+        '
+      title: CognitionInsight
+    RecordingAnalysis:
+      type: object
+      properties:
+        wellbeing:
+          $ref: '#/components/schemas/WellbeingAnalysis'
+          description: Wellbeing analysis results.
+        parkinsons:
+          $ref: '#/components/schemas/ParkinsonsAnalysis'
+          description: Parkinson's analysis results.
+        alzheimers:
+          $ref: '#/components/schemas/AlzheimersAnalysis'
+          description: Alzheimer's analysis results.
+        communication_coach:
+          $ref: '#/components/schemas/CommunicationCoachAnalysis'
+          description: Communication coach analysis results.
+      description: Analysis results grouped by type.
+      title: RecordingAnalysis
+    ParkinsonsInsight:
+      type: object
+      properties:
+        rating:
+          type: string
+          description: Parkinson's risk band derived from the risk score.
+        score:
+          type: integer
+          description: Parkinson's disease probability.
+      description: 'Parkinson''s risk insight. Omitted if analysis did not complete; rating and score are omitted when unavailable.
+
+        '
+      title: ParkinsonsInsight
+    DepressionInsightRating:
+      type: string
+      enum:
+      - minimal
+      - moderate
+      - severe
+      description: Predicted depression level.
+      title: DepressionInsightRating
+    CommunicationCoachInsights:
+      type: object
+      properties:
+        rhythm:
+          $ref: '#/components/schemas/CommunicationCoachInsight'
+          description: Score reflecting the balance between speech and pauses.
+        clarity:
+          $ref: '#/components/schemas/CommunicationCoachInsight'
+          description: Score reflecting the proportion of intelligible speech.
+        positiveness:
+          $ref: '#/components/schemas/CommunicationCoachInsight'
+          description: Score reflecting the proportion of speech with a positive tone.
+        speaking_rate:
+          $ref: '#/components/schemas/CommunicationCoachInsight'
+          description: Score reflecting how closely the speaker's word rate matches the ideal words-per-minute rate.
+      required:
+      - rhythm
+      - clarity
+      - positiveness
+      - speaking_rate
+      description: Communication coach insights keyed by aspect. Present only when analysis completed.
+      title: CommunicationCoachInsights
+    CommunicationCoachIndicators:
+      type: object
+      properties:
+        word_rate:
+          type: integer
+          description: Words spoken per minute.
+        fragment_rate:
+          type: integer
+          description: Speech fragments per minute.
+        filler_words_rate:
+          type: number
+          format: double
+          description: Filler words per minute.
+      required:
+      - word_rate
+      - fragment_rate
+      - filler_words_rate
+      description: Speech quantities measured from the audio. Present only when analysis completed.
+      title: CommunicationCoachIndicators
+    ParkinsonsIndicators:
+      type: object
+      properties:
+        volume:
+          type: integer
+          description: Mean energy in decibels.
+        monoloudness:
+          type: number
+          format: double
+          description: Standard deviation of loudness across the utterance in decibels.
+        monotony:
+          type: integer
+          description: Standard deviation of the fundamental frequency in hertz.
+        articulation:
+          type: integer
+          description: Dynamic range of the second formant in hertz.
+        speech_rate:
+          type: integer
+          description: Mean number of words spoken per minute.
+        speech_rate_stdev:
+          type: integer
+          description: Standard deviation of speech rate in words-per-minute.
+        pause_duration:
+          type: integer
+          description: Mean duration of silent pauses in milliseconds.
+        pause_duration_stdev:
+          type: integer
+          description: Standard deviation of pause duration in milliseconds.
+        voice_quality:
+          type: number
+          format: double
+          description: Cepstral peak prominence in decibels.
+        hnr:
+          type: integer
+          description: Harmonics-to-noise ratio in decibels.
+        stuttering:
+          type: number
+          format: double
+          description: Word and n-gram repetitions per minute.
+      description: 'Acoustic and speech indicators used for Parkinson''s analysis. Omitted if analysis did not complete; individual indicators are omitted when unavailable.
+
+        '
+      title: ParkinsonsIndicators
+    StressInsight:
+      type: object
+      properties:
+        rating:
+          $ref: '#/components/schemas/StressInsightRating'
+          description: Predicted stress level.
       required:
       - rating
-      title: DepressionInsight
+      title: StressInsight
     CommunicationCoachInsight:
       type: object
       properties:
@@ -666,14 +519,108 @@ components:
       - score
       description: Overall communication score
       title: CommunicationCoachInsight
-    DepressionInsightRating:
+    AlzheimersAnalysis:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of Alzheimer's analysis processing.
+        indicators:
+          $ref: '#/components/schemas/AlzheimersIndicators'
+          description: Alzheimer's-related linguistic indicators.
+        insights:
+          $ref: '#/components/schemas/AlzheimersInsights'
+          description: Cognition insights keyed by condition.
+      required:
+      - status
+      title: AlzheimersAnalysis
+    ParkinsonsAnalysis:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of Parkinson's analysis processing.
+        indicators:
+          $ref: '#/components/schemas/ParkinsonsIndicators'
+          description: Parkinson's-related acoustic indicators.
+        insights:
+          $ref: '#/components/schemas/ParkinsonsInsights'
+          description: Parkinson's insights keyed by condition.
+      required:
+      - status
+      title: ParkinsonsAnalysis
+    CognitionScores:
+      type: object
+      properties:
+        hc:
+          type: number
+          format: double
+          description: Probability of healthy.
+        mci:
+          type: number
+          format: double
+          description: Probability of mild cognitive impairment.
+        ad:
+          type: number
+          format: double
+          description: Probability of Alzheimer's disease.
+      description: Class probability distribution. Individual probabilities are omitted when unavailable.
+      title: CognitionScores
+    AnalysisType:
       type: string
       enum:
-      - minimal
-      - moderate
-      - severe
-      description: Predicted depression level.
-      title: DepressionInsightRating
+      - wellbeing
+      - parkinsons
+      - alzheimers
+      - communication_coach
+      description: Analysis type identifier.
+      title: AnalysisType
+    RecordingAnalysisMetadata:
+      type: object
+      properties:
+        recording_id:
+          type: string
+          format: uuid
+          description: The ID of the recording.
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the account that submitted the recording.
+        recorded_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of when the recording began.
+        uploaded_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of when the recording was uploaded. Omitted when unavailable.
+        audio_file_format:
+          type: string
+          description: Detected audio file format. Omitted when unavailable.
+        audio_size_bytes:
+          type: integer
+          description: Audio file size in bytes. Omitted when unavailable.
+        audio_duration_seconds:
+          type: number
+          format: double
+          description: Total audio duration in seconds.
+        audio_sample_rate_hz:
+          type: integer
+          description: Audio sample rate in Hz. Omitted when unavailable.
+        audio_bit_rate_bps:
+          type: integer
+          description: Audio bit rate in bits per second. Omitted when unavailable.
+        speech_duration_seconds:
+          type: number
+          format: double
+          description: Detected speech duration in seconds. Omitted when unavailable.
+      required:
+      - recording_id
+      - account_id
+      - recorded_at
+      - audio_duration_seconds
+      description: Metadata about the recording.
+      title: RecordingAnalysisMetadata
     ErrorError:
       type: object
       properties:
@@ -688,6 +635,59 @@ components:
       - message
       description: Error details.
       title: ErrorError
+    ParkinsonsInsights:
+      type: object
+      properties:
+        parkinsons:
+          $ref: '#/components/schemas/ParkinsonsInsight'
+          description: Parkinson's risk insight.
+      title: ParkinsonsInsights
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      required:
+      - error
+      title: Error
+    CommunicationCoachAnalysis:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AnalysisStatus'
+          description: Status of communication coach analysis processing.
+        indicators:
+          $ref: '#/components/schemas/CommunicationCoachIndicators'
+          description: Communication-related speech indicators.
+        insights:
+          $ref: '#/components/schemas/CommunicationCoachInsights'
+          description: Communication coach scores.
+      required:
+      - status
+      title: CommunicationCoachAnalysis
+    DepressionInsight:
+      type: object
+      properties:
+        rating:
+          $ref: '#/components/schemas/DepressionInsightRating'
+          description: Predicted depression level.
+      required:
+      - rating
+      title: DepressionInsight
+    RecordingAnalysisResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/RecordingAnalysisMetadata'
+          description: Metadata about the recording.
+        analysis:
+          $ref: '#/components/schemas/RecordingAnalysis'
+          description: Analysis results grouped by type.
+      required:
+      - metadata
+      - analysis
+      title: RecordingAnalysisResponse
   securitySchemes:
     bearerAuth:
       type: http

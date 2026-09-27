@@ -49,6 +49,15 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      required:
+      - error
+      title: Error
     RecordingsUsageResponse:
       type: object
       properties:
@@ -79,15 +88,6 @@ components:
       - included_granted
       - purchased_remaining
       title: RecordingsUsageResponse
-    Error:
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorError'
-          description: Error details.
-      required:
-      - error
-      title: Error
     ErrorError:
       type: object
       properties:
