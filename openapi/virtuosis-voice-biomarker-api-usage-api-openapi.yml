@@ -49,29 +49,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorError'
-          description: Error details.
-      required:
-      - error
-      title: Error
-    ErrorError:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Machine-readable error type.
-        message:
-          type: string
-          description: Human-readable description of the error.
-      required:
-      - type
-      - message
-      description: Error details.
-      title: ErrorError
     RecordingsUsageResponse:
       type: object
       properties:
@@ -102,6 +79,29 @@ components:
       - included_granted
       - purchased_remaining
       title: RecordingsUsageResponse
+    ErrorError:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Machine-readable error type.
+        message:
+          type: string
+          description: Human-readable description of the error.
+      required:
+      - type
+      - message
+      description: Error details.
+      title: ErrorError
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      required:
+      - error
+      title: Error
   securitySchemes:
     bearerAuth:
       type: http

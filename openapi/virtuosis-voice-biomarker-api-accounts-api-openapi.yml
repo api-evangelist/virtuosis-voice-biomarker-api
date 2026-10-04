@@ -55,15 +55,6 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          $ref: '#/components/schemas/ErrorError'
-          description: Error details.
-      required:
-      - error
-      title: Error
     CreateAccountResponse:
       type: object
       properties:
@@ -98,6 +89,15 @@ components:
       - message
       description: Error details.
       title: ErrorError
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
+      required:
+      - error
+      title: Error
   securitySchemes:
     bearerAuth:
       type: http
