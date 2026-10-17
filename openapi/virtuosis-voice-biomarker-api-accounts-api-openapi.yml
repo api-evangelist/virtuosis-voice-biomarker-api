@@ -55,20 +55,15 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
-    CreateAccountResponse:
+    Error:
       type: object
       properties:
-        account_id:
-          type: string
-          format: uuid
-          description: The ID of the created account.
-        organisation_role:
-          $ref: '#/components/schemas/CreateAccountResponseOrganisationRole'
-          description: The organisation role assigned to the created account. API-created accounts are always speakers.
+        error:
+          $ref: '#/components/schemas/ErrorError'
+          description: Error details.
       required:
-      - account_id
-      - organisation_role
-      title: CreateAccountResponse
+      - error
+      title: Error
     CreateAccountResponseOrganisationRole:
       type: string
       enum:
@@ -89,15 +84,20 @@ components:
       - message
       description: Error details.
       title: ErrorError
-    Error:
+    CreateAccountResponse:
       type: object
       properties:
-        error:
-          $ref: '#/components/schemas/ErrorError'
-          description: Error details.
+        account_id:
+          type: string
+          format: uuid
+          description: The ID of the created account.
+        organisation_role:
+          $ref: '#/components/schemas/CreateAccountResponseOrganisationRole'
+          description: The organisation role assigned to the created account. API-created accounts are always speakers.
       required:
-      - error
-      title: Error
+      - account_id
+      - organisation_role
+      title: CreateAccountResponse
   securitySchemes:
     bearerAuth:
       type: http
